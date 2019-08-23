@@ -1,18 +1,21 @@
 pragma solidity ^0.5.0;
 
 import "./WordToken.sol";
+import "./WordStorage.sol";
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 
-contract WordDao is Initializable {
+contract WordDao is Initializable, WordStorage {
     WordToken public token;
+    WordStorage public wordStorage;
     uint256 public balance;
 
     mapping(uint256 => string) wordMapping;
 
     event wordAdded(string word, uint256 tribute, address adder);
 
-    function SetupDao() public initializer {
+    function SetupDao(string memory _language, uint256 _fee) public initializer {
         token = new WordToken(450000);
+        wordStorage = new WordStorage(_language, _fee);
     }
 
     function addWord(string memory _word) public payable {

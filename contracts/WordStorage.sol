@@ -78,8 +78,11 @@ contract WordStorage is Initializable {
         fee = _fee;
     }
 
-    function setWord(string calldata _word) external returns (bool) {
-        //check word first
+    function setWord(string calldata _word)
+        external
+        onlyWordDao
+        returns (bool)
+    {
         bytes32 _wordBytes32 = keccak256(abi.encodePacked(_word));
         wordByNumber[totalWords] = _word;
         numberForWord[_word] = totalWords;
@@ -94,6 +97,7 @@ contract WordStorage is Initializable {
 
         emit wordAdded(_word, msg.sender, totalWords, _wordBytes32);
         totalWords = totalWords + 1;
+
         return true;
     }
 
