@@ -62,7 +62,7 @@ contract WordStorage is Initializable {
         address storageAddress,
         address wordDao
     );
-    event feeChanges(uint256 fee);
+    event feeChanged(uint256 fee);
 
     constructor(string memory _language, uint256 _fee) public {
         language = _language;
@@ -76,6 +76,7 @@ contract WordStorage is Initializable {
     //only doa
     function changeFee(uint256 _fee) external onlyWordDao {
         fee = _fee;
+        emit feeChanged(fee);
     }
 
     function setWord(string calldata _word)
