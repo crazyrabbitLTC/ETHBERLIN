@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build-contracts": "openzeppelin compile",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
   },
   "repository": {
     "type": "git",
@@ -41,6 +43,10 @@
     "@openzeppelin/cli": "^2.5.1",
     "@openzeppelin/gsn-helpers": "^0.1.9",
     "chai": "^4.2.0",
-    "openzeppelin-test-helpers": "^0.3.0"
+    "openzeppelin-test-helpers": "^0.3.0",
+    "prettier": "^1.18.2",
+    "prettier-plugin-solidity": "^1.0.0-alpha.31",
+    "solhint": "^2.2.0",
+    "solhint-plugin-prettier": "0.0.3"
   }
 }
