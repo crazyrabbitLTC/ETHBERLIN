@@ -5,7 +5,6 @@ import "@openzeppelin/upgrades/contracts/Initializable.sol";
 contract WordStorage is Initializable {
     uint256 public totalWords;
     string public language;
-    address public signAuthority;
     address public wordDao;
 
     uint256 public fee;
@@ -58,9 +57,10 @@ contract WordStorage is Initializable {
     );
     event wordRequested(uint256 _wordNumber, address indexed _from);
     event storageCreated(
-        string _language,
+        string language,
         uint256 fee,
-        address _storageAddress
+        address storageAddress,
+        address wordDao
     );
     event feeChanges(uint256 fee);
 
@@ -68,7 +68,7 @@ contract WordStorage is Initializable {
         language = _language;
         wordDao = msg.sender;
         fee = _fee;
-        emit storageCreated(language, fee, address(this));
+        emit storageCreated(language, fee, address(this), msg.sender);
     }
 
     //WordSetter
