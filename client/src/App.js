@@ -13,41 +13,29 @@ import styles from './App.module.scss';
 const infuraToken = '95202223388e49f48b423ea50a70e336';
 
 function App() {
-  // get ephemeralKey
-  const signKey = useEphemeralKey();
-
-  // get GSN web3
-  // const context = useWeb3Network(`wss://rinkeby.infura.io/ws/v3/${infuraToken}`, {
-  //   pollInterval: 15 * 1000,
-  //   gsn: {
-  //     signKey,
-  //   },
-  // });
-
-  // const context = useWeb3Network('http://127.0.0.1:8545', {
-  //   gsn: {
-  //     dev: true,
-  //     signKey,
-  //   },
-  // });
-
   const context = useWeb3Injected();
 
+  console.log('Context: ', context);
   // load Counter json artifact
-  let counterJSON = undefined;
+  let wordDaoJson = undefined;
   try {
-    counterJSON = require('../../contracts/Counter.sol');
+    wordDaoJson = require('../../contracts/WordDao.sol');
+    console.log('WordDao json', wordDaoJson);
   } catch (e) {
     console.log(e);
   }
 
-  // load Counter instance
-  const [counterInstance, setCounterInstance] = useState(undefined);
+  // load WordDao instance
+  const [WordDaoInstance, setWordDaoInstance] = useState(undefined);
   let deployedNetwork = undefined;
-  if (!counterInstance && context && counterJSON && counterJSON.networks && context.networkId) {
-    deployedNetwork = counterJSON.networks[context.networkId.toString()];
+  if (!WordDaoInstance && context && wordDaoJson && wordDaoJson.networks && context.networkId) {
+    deployedNetwork = wordDaoJson.networks[context.networkId.toString()];
+    console.log('Deployed Network:', deployedNetwork);
     if (deployedNetwork) {
-      setCounterInstance(new context.lib.eth.Contract(counterJSON.abi, deployedNetwork.address));
+      console.log('wordDaoJson.abi: ', wordDaoJson.abi, 'deployedNetwork.address: ', deployedNetwork.address);
+      const contract = new context.lib.eth.Contract(wordDaoJson.abi, deployedNetwork.address);
+      setWordDaoInstance(contract);
+      console.log('WordDao instance', contract);
     }
   }
 
@@ -62,19 +50,7 @@ function App() {
 
   return (
     <div className={styles.App}>
-      <Header />
-      <Hero />
-      <div className={styles.wrapper}>
-        {!context.lib && renderNoWeb3()}
-        <div className={styles.contracts}>
-          <h1>BUIDL with GSN Kit!</h1>
-          <div className={styles.widgets}>
-            <Web3Info title="Web3 Provider" context={context} />
-            <Counter {...context} JSON={counterJSON} instance={counterInstance} deployedNetwork={deployedNetwork} />
-          </div>
-        </div>
-      </div>
-      <Footer />
+      <div>Welcome to WordDao!</div>
     </div>
   );
 }

@@ -7,6 +7,8 @@ contract WordDao is Initializable {
     WordToken public token;
     uint256 public balance;
 
+    mapping(uint256 => string) wordMapping;
+
     event wordAdded(string word, uint256 tribute, address adder);
 
     function SetupDao() public initializer {
