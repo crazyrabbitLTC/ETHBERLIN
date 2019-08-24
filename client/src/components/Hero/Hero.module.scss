@@ -3,7 +3,8 @@
 .Hero {
   width: 100%;
   color: rgb(47, 47, 47);
-  display: flex;
+  padding-left: 20px;
+  padding-right: 20px;
   flex-flow: row wrap;
   align-items: flex-start;
   justify-content: space-around;
