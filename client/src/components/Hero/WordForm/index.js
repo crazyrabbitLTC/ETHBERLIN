@@ -81,7 +81,7 @@ function WordForm(props) {
           <Form.Input type="text" required width={1} onChange={handleValidation} />
         </Form.Field>
         <Button className={styles.button} size="small" type="submit" width={1}>
-          Sign Up
+          Submit
         </Button>
       </Form>
     </div>

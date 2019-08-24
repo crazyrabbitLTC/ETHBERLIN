@@ -37,7 +37,9 @@
     padding-right: 5px;
     border-bottom: black;
     border-width: 1px;
-    border-style: dashed;
+    border-style: solid;
+    border-top-style: dashed;
+    border-left: none;
   }
 
   .hash {
