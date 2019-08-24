@@ -7,6 +7,7 @@
     "@openzeppelin/network": "^0.2.7",
     "@openzeppelin/solidity-loader": "^1.4.5",
     "classnames": "^2.2.6",
+    "express": "^4.17.1",
     "json-loader": "^0.5.7",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
