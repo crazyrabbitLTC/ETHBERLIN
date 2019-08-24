@@ -6,10 +6,17 @@ const SingleWord = props => {
 
   return (
     <div className={styles.SingleWord}>
-      <div>{word}</div>
-      <div>{adder}</div>
-      <div>{tribute}</div>
-      <div>{wordIndex}</div>
+      <div className={styles.addressTribute}>
+        <div className={styles.address}>{adder}</div>
+        <div className={styles.tribute}>{tribute} WEI</div>
+      </div>
+      <div className={styles.wordDetail}>
+        <div className={styles.index}>
+          <React.Fragment className={styles.hash}>#:</React.Fragment>
+          {wordIndex}
+        </div>
+        <div className={styles.word}>{word}</div>
+      </div>
     </div>
   );
 };

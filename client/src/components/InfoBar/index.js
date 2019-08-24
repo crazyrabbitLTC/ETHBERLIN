@@ -33,14 +33,7 @@ const InfoBar = props => {
 
   console.log('The state: ', state);
   const listWords = state.map(obj => {
-    return (
-      <div>
-        <div>Word: {obj.word}</div>
-        <div>Index: {obj.wordIndex}</div>
-        <div>Tribute: {obj.tribute}</div>
-        <div>Contributor: {obj.adder}</div>
-      </div>
-    );
+    return <SingleWord {...obj} />;
   });
 
   return <div className={styles.InfoBar}>{listWords}</div>;
