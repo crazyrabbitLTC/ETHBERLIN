@@ -15,7 +15,7 @@ contract WordDao is Initializable, Verify {
     address public DAOController;
     address public owner;
 
-    mapping(string => bool) wordExists;
+    mapping(string => bool) public wordExists;
 
     /********
     MODIFIERS

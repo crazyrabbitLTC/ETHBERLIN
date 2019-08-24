@@ -1,6 +1,7 @@
 @import '../../layout/variables.scss';
 
 .Hero {
+  padding: 60px 20px;
   width: 100%;
   color: rgb(47, 47, 47);
   display: flex;
@@ -17,6 +18,7 @@
     align-items: center;
     width: 100%;
   }
+
   .left,
   .right {
     display: flex;

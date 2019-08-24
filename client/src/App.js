@@ -25,14 +25,6 @@ function App() {
     console.log(e);
   }
 
-  //Pack words into app
-  // let wordList = null;
-  // try {
-  //   wordList = require('./data/WordDao_SignedWordList.json');
-  // } catch (e) {
-  //   console.log(e);
-  // }
-
   // load WordDao instance
   const [WordDaoInstance, setWordDaoInstance] = useState(undefined);
   let deployedNetwork = undefined;
@@ -56,8 +48,8 @@ function App() {
   return (
     <div className={styles.App}>
       <Header {...context} />
+      <Hero {...context} wordDaoInstance={WordDaoInstance} />
       <InfoBar {...context} />
-      <Hero {...context} />
       <Footer {...context} />
     </div>
   );
