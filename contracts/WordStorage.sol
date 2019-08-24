@@ -7,10 +7,6 @@ contract WordStorage {
 
     uint256 public fee;
 
-    //modifyer to check if Uint is valid
-    //modifyer to check if Bytes32 is valid
-    //modifyer to check if String is valid
-
     /********
     MODIFIERS
     ********/
@@ -24,14 +20,6 @@ contract WordStorage {
         _;
     }
 
-    // modifier onlySigned {
-    //     require(
-    //         members[msg.sender].shares > 0,
-    //         "Moloch::onlyMember - not a member"
-    //     );
-    //     _;
-    // }
-
     //Store words based on Integers
     mapping(uint256 => string) internal wordByNumber;
     mapping(string => uint256) internal numberForWord;
@@ -39,12 +27,6 @@ contract WordStorage {
     mapping(string => bytes32) internal bytes32ForWord;
     mapping(uint256 => bytes32) internal uint256ForBytes32;
     mapping(bytes32 => uint256) internal bytes32ForWordUint256;
-
-    //Store Details About the word- index by number:
-    //Nessesary????!!!!??
-    // mapping(uint256 => uint256) internal wordLength;
-    // mapping(uint256 => string[]) internal wordCharString;
-    // mapping(uint256 => bytes32[]) internal wordCharBytes;
 
     //Arrays
     bytes32[] internal arrayOfBytes32;
@@ -74,8 +56,6 @@ contract WordStorage {
         fee = _fee;
         emit storageCreated(language, fee, address(this), msg.sender);
     }
-
-    //WordSetter
 
     //only doa
     function changeFee(uint256 _fee) external onlyWordDao {
@@ -161,15 +141,4 @@ contract WordStorage {
     {
         return bytes32ForWordUint256[_wordBytes];
     }
-
-    //Utils
-
-    function isContract(address _addr) private view returns (bool status) {
-        uint32 size;
-        assembly {
-            size := extcodesize(_addr)
-        }
-        return (size > 0);
-    }
-
 }
