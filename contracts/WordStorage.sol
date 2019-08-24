@@ -1,8 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
-
-contract WordStorage is Initializable {
+contract WordStorage {
     uint256 public totalWords;
     string public language;
     address public wordDao;
@@ -41,6 +39,12 @@ contract WordStorage is Initializable {
     mapping(string => bytes32) internal bytes32ForWord;
     mapping(uint256 => bytes32) internal uint256ForBytes32;
     mapping(bytes32 => uint256) internal bytes32ForWordUint256;
+
+    //Store Details About the word- index by number:
+    //Nessesary????!!!!??
+    // mapping(uint256 => uint256) internal wordLength;
+    // mapping(uint256 => string[]) internal wordCharString;
+    // mapping(uint256 => bytes32[]) internal wordCharBytes;
 
     //Arrays
     bytes32[] internal arrayOfBytes32;
@@ -91,7 +95,6 @@ contract WordStorage is Initializable {
         bytes32ForWord[_word] = _wordBytes32;
         uint256ForBytes32[totalWords] = _wordBytes32;
         bytes32ForWordUint256[_wordBytes32] = totalWords;
-
         arrayOfBytes32.push(_wordBytes32);
         arrayOfWords.push(_word);
         arrayOfUint256.push(totalWords);

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
 import { useWeb3Network, useEphemeralKey, useWeb3Injected } from '@openzeppelin/network';
-import Header from './components/Header/index.js';
-import Footer from './components/Footer/index.js';
-import Hero from './components/Hero/index.js';
-import Web3Info from './components/Web3Info/index.js';
-import Counter from './components/Counter/index.js';
+import Header from './components/old/Header/index.js';
+import Footer from './components/old/Footer/index.js';
+import Hero from './components/old/Hero/index.js';
+import Web3Info from './components/old/Web3Info/index.js';
+import Counter from './components/old/Counter/index.js';
 
 import styles from './App.module.scss';
 
