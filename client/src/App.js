@@ -25,15 +25,14 @@ function App() {
     console.log(e);
   }
 
-    //Pack words into app
-    let wordList = undefined;
-    try {
-      wordList = require('./data/WordDao_SignedWordList.json');
-    } catch (e) {
-      console.log(e);
-    }
-    console.log("Hello: ", wordList["hello"].signature);
-    
+  //Pack words into app
+  // let wordList = null;
+  // try {
+  //   wordList = require('./data/WordDao_SignedWordList.json');
+  // } catch (e) {
+  //   console.log(e);
+  // }
+
   // load WordDao instance
   const [WordDaoInstance, setWordDaoInstance] = useState(undefined);
   let deployedNetwork = undefined;
