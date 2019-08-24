@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 
-import { useWeb3Network, useEphemeralKey, useWeb3Injected } from '@openzeppelin/network';
-// import Header from './components/unworkingstyles/Header';
-// import Footer from './components/unworkingstyles/Footer';
-// import Body from './components/unworkingstyles/Body';
-// import InfoBar from './components/unworkingstyles/InfoBar';
+import { useWeb3Injected } from '@openzeppelin/network';
 import Hero from './components/Hero';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -12,7 +8,7 @@ import InfoBar from './components/InfoBar';
 import styles from './App.module.scss';
 
 // const infuraToken = process.env.REACT_APP_INFURA_TOKEN;
-const infuraToken = '95202223388e49f48b423ea50a70e336';
+//const infuraToken = '95202223388e49f48b423ea50a70e336';
 
 function App() {
   const context = useWeb3Injected();
@@ -36,20 +32,20 @@ function App() {
     }
   }
 
-  function renderNoWeb3() {
-    return (
-      <div className={styles.loader}>
-        <h3>Web3 Provider Not Found</h3>
-        <p>Please, install and run Ganache.</p>
-      </div>
-    );
-  }
+  // function renderNoWeb3() {
+  //   return (
+  //     <div className={styles.loader}>
+  //       <h3>Web3 Provider Not Found</h3>
+  //       <p>Please, install and run Ganache.</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className={styles.App}>
       <Header {...context} />
       <Hero {...context} wordDaoInstance={WordDaoInstance} />
-      <InfoBar {...context} />
+      <InfoBar {...context} wordDaoInstance={WordDaoInstance} />
       <Footer {...context} />
     </div>
   );

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './WordForm.module.scss';
 import axios from 'axios';
-import { Field, Form, Input, Box, Button } from 'rimble-ui';
+import { Form, Button } from 'rimble-ui';
 
 function WordForm(props) {
-  const { wordDaoInstance, lib, accounts } = props;
+  const { wordDaoInstance, accounts } = props;
   const [state, setState] = useState({ validated: false, word: '' });
   const [subState, setSubState] = useState({
     word: '',
@@ -48,11 +48,11 @@ function WordForm(props) {
       console.log('Word: ', word, ' is alreadyReadyRegistered: ', isAlreadyRegistered);
 
       let signature;
-      let claim;
+
       if (!isAlreadyRegistered) {
         try {
           signature = await fetchSignature(word);
-          claim = await claimWord(word, signature);
+          await claimWord(word, signature);
         } catch (error) {
           console.log(error);
         }

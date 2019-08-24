@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './header.module.scss';
-import logo from './stater-kits-logo.png';
 
 const Header = () => (
   <div className={styles.header}>

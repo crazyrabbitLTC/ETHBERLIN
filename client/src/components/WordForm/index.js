@@ -5,8 +5,6 @@ import cx from 'classnames';
 import logos from './pic_bg.png';
 
 function Hero(props) {
-  console.log('Props: ', props);
-
   const defaultSigState = {
     word: '',
     signature: '',
