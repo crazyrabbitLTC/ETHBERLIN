@@ -21,6 +21,14 @@ function App() {
     console.log(e);
   }
 
+  let erc20 = undefined;
+  try {
+    erc20 = require('../../contracts/ERC20Detailed.sol');
+  } catch (e) {
+    console.log(e);
+  }
+  console.log('ERC20: ', erc20);
+
   // load WordDao instance
   const [WordDaoInstance, setWordDaoInstance] = useState(undefined);
   let deployedNetwork = undefined;
