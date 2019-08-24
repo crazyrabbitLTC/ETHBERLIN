@@ -9,7 +9,6 @@ import Hero from './components/Hero';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import InfoBar from './components/InfoBar';
-
 import styles from './App.module.scss';
 
 // const infuraToken = process.env.REACT_APP_INFURA_TOKEN;

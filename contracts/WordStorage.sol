@@ -96,6 +96,16 @@ contract WordStorage {
     {
         return numberForWord[_word];
     }
+
+    function stringToInt(string calldata _word)
+        external
+        view
+        onlyWordDao
+        returns (uint256)
+    {
+        return numberForWord[_word];
+    }
+
     //getWordStringToBytes32
     function getWordStringToBytes32(string calldata _word)
         external

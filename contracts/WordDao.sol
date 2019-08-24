@@ -27,19 +27,24 @@ contract WordDao is Initializable, Verify {
 
     mapping(uint256 => string) wordMapping;
 
-    event wordAdded(string word, uint256 tribute, address adder);
+    event wordAdded(
+        string word,
+        uint256 indexed wordIndex,
+        uint256 tribute,
+        address adder
+    );
     event daoMaster(address daoMaster);
 
     //the Token should be mintable
-    function SetupDao(string memory _language, uint256 _fee, address _signAuthority)
+    function SetupDao(string memory _language, uint256 _fee, uint256 _tribute)
         public
         initializer
     {
         token = new WordToken(450000);
         wordStorage = new WordStorage(_language, _fee);
         owner = msg.sender;
-        tribute = 1 wei;
-        signAuthority = _signAuthority;
+        tribute = _tribute;
+        signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
     }
 
     function setMaster(address _dao) public onlyMaster {
@@ -48,23 +53,24 @@ contract WordDao is Initializable, Verify {
         emit daoMaster(_dao);
     }
 
-
-
     function addWord(string memory _word, bytes memory signature)
         public
         payable
     {
-        require(
-            isValidData(_word, signature, signAuthority),
-            "Word Not Valid"
-        );
-        require(msg.value >= tribute, "Tribute not high enough");
         require(wordExists[_word] == false, "Word has already been Added");
+        require(isValidData(_word, signature, signAuthority), "Word Not Valid");
+        require(msg.value >= tribute, "Tribute not high enough");
+
         wordStorage.setWord(_word);
         token.transfer(msg.sender, 1);
         contractBalance += msg.value;
         wordExists[_word] = true;
-        emit wordAdded(_word, msg.value, msg.sender);
+        emit wordAdded(
+            _word,
+            wordStorage.stringToInt(_word),
+            msg.value,
+            msg.sender
+        );
     }
 
     function setUseFee(uint256 _fee) external onlyMaster {
