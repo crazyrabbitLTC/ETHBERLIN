@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './header.module.scss';
-import Hero from '../Hero';
+import WordForm from '../WordForm';
 
 const Header = props => (
   <div className={styles.header}>
@@ -9,7 +9,7 @@ const Header = props => (
         <div className={styles.blackText}>WordDao</div>
       </div>
     </nav>
-    <Hero {...props} />
+    <WordForm {...props} />
   </div>
 );
 

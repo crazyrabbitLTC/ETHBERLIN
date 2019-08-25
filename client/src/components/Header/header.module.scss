@@ -2,70 +2,20 @@
 
 .header {
   padding: 10px 0;
-  width: 100%;
   background: rgb(250, 250, 250);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   height: auto;
   display: flex;
+  flex-direction: row;
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 40px;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 15px;
 
-  blackText {
-    color: black;
-  }
-
-  nav {
-    width: 100%;
-    max-width: 1180px;
-    padding: 0 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .brand {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: flex-start;
-      align-items: center;
-      width: 300px;
-
-      img {
-        height: 1.5em;
-        vertical-align: middle;
-      }
-    }
-
-    ul {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-flow: row nowrap;
-      height: 60px;
-      list-style: none;
-
-      li {
-        padding: 15px;
-        margin: 0;
-        margin-right: 60px;
-        text-decoration: none;
-        a {
-          color: $white;
-          text-transform: uppercase;
-          font-size: 14px;
-          letter-spacing: 2px;
-          text-decoration: none;
-          font-family: 'Roboto Mono', monospace;
-          letter-spacing: 0.8px;
-          opacity: 0.8;
-
-          &:hover {
-            opacity: 1;
-            text-decoration: none;
-            border-bottom: 2px solid $white;
-          }
-        }
-      }
-    }
+  .blackText {
+    color: #000000b8;
+    font-weight: 900;
   }
 }
 

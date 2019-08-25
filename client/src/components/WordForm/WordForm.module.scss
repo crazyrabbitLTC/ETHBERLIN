@@ -1,4 +1,4 @@
-@import '../../../layout/variables.scss';
+@import '../../layout/variables.scss';
 
 .bar {
   display: flex;
@@ -19,6 +19,7 @@
 
   .inputBox {
     width: 100%;
+    font-size: 30px;
   }
 
   .button {
@@ -31,7 +32,7 @@
     background: #fafafa;
     border: none;
     border-bottom: 1px dashed #acacac;
-    padding-bottom: -5px;
+    font-size: 30px;
   }
 
   .inputBox:focus {
