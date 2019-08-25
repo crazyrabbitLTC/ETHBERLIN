@@ -9,16 +9,10 @@ import zeppelin from './zeppelin_logo.png';
 const Footer = () => (
   <footer className={styles.footer}>
     <div className={styles.brand}>
-      <div className={styles.created}>
-        Created by
-        <a href="https://openzeppelin.com/" rel="noopener noreferrer" target="_blank">
-          <img style={{ width: '80px', height: 'auto', marginLeft: '10px' }} src={zeppelin} alt="OpenZeppelin" />
-        </a>
-      </div>
-      <div className={styles.copyright}>Copyright © 2019 zOS Global Limited</div>
+      <div className={styles.created}>Created by Dennison Bertram © 2019</div>
     </div>
     <div className={styles.links}>
-      <a href="mailto:ramon@zeppelin.solutions" target="_blank" rel="noopener noreferrer">
+      <a href="mailto:dennison@dennisonbertram.com" target="_blank" rel="noopener noreferrer">
         <img src={mail} alt="email" />
       </a>
       <a href="https://twitter.com/OpenZeppelin" rel="noopener noreferrer" target="_blank">

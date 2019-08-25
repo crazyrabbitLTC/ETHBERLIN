@@ -5,10 +5,45 @@ import SingleWord from './SingleWord';
 const InfoBar = props => {
   const blockCount = 1000;
   const { wordDaoInstance, accounts, lib, connected } = props;
-
   const [state, setState] = useState([]);
+  let unsubscribe;
 
-  const getAllMsg = async () => {
+  useEffect(() => {
+    const load = async () => {
+      await getAllWords();
+      unsubscribe = await subscribeLogEvent(wordDaoInstance, 'wordAdded');
+    };
+
+    if (wordDaoInstance) {
+      load();
+    }
+    if (unsubscribe) {
+      return () => unsubscribe.unsubscribe();
+    }
+  }, [connected, wordDaoInstance]);
+
+  const subscribeLogEvent = async (instance, eventName) => {
+    const eventJsonInterface = lib.utils._.find(
+      instance._jsonInterface,
+      o => o.name === eventName && o.type === 'event',
+    );
+
+    const subscription = lib.eth.subscribe(
+      'logs',
+      {
+        address: instance.options.address,
+        topics: [eventJsonInterface.signature],
+      },
+      (error, result) => {
+        if (!error) {
+          getAllWords();
+        }
+      },
+    );
+    return subscription;
+  };
+
+  const getAllWords = async () => {
     let words = [];
     if (wordDaoInstance) {
       const currentblock = await lib.eth.getBlockNumber();
@@ -28,7 +63,7 @@ const InfoBar = props => {
   };
 
   useEffect(() => {
-    getAllMsg();
+    getAllWords();
   }, [connected, wordDaoInstance]);
 
   console.log('The state: ', state);

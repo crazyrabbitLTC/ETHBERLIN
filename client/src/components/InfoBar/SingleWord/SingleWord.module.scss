@@ -21,8 +21,10 @@
 
   .word {
     font-size: -webkit-xxx-large;
+    font-family: 'Lexend Deca', sans-serif;
     margin-left: 8px;
     font-weight: 900;
+    font-size: 100px;
   }
 
   .wordDetail {
@@ -40,6 +42,7 @@
     border-style: solid;
     border-top-style: dashed;
     border-left: none;
+    justify-content: space-between;
   }
 
   .hash {

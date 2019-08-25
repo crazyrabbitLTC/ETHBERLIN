@@ -12,8 +12,7 @@ const SingleWord = props => {
       </div>
       <div className={styles.wordDetail}>
         <div className={styles.index}>
-          <React.Fragment className={styles.hash}>#:</React.Fragment>
-          {wordIndex}
+          {/* <React.Fragment >#:</React.Fragment> */}[{wordIndex}]
         </div>
         <div className={styles.word}>{word}</div>
       </div>

@@ -75,15 +75,20 @@ function WordForm(props) {
 
   return (
     <div className={styles.bar}>
-      <div className={styles.word}>Check and Submit Word: </div>
-      <Form className={styles.row} onSubmit={handleSubmit}>
-        <Form.Field className={styles.inputBox} validated={state.validated} width={1}>
-          <Form.Input type="text" required width={1} onChange={handleValidation} />
-        </Form.Field>
-        <Button className={styles.button} size="small" type="submit" width={1}>
-          Submit
-        </Button>
-      </Form>
+      <div className={styles.word}>
+        Check and Submit Word:
+        <form className={styles.row} onSubmit={handleSubmit}>
+          <input
+            className={styles.inputBox}
+            type="text"
+            preview="hello"
+            required
+            width={1}
+            onChange={handleValidation}
+          />
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
     </div>
   );
 }

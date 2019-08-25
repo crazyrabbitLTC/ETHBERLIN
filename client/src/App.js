@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useWeb3Injected } from '@openzeppelin/network';
-import Hero from './components/Hero';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import InfoBar from './components/InfoBar';
@@ -20,14 +20,6 @@ function App() {
   } catch (e) {
     console.log(e);
   }
-
-  let erc20 = undefined;
-  try {
-    erc20 = require('../../contracts/ERC20Detailed.sol');
-  } catch (e) {
-    console.log(e);
-  }
-  console.log('ERC20: ', erc20);
 
   // load WordDao instance
   const [WordDaoInstance, setWordDaoInstance] = useState(undefined);
@@ -51,8 +43,7 @@ function App() {
 
   return (
     <div className={styles.App}>
-      <Header {...context} />
-      <Hero {...context} wordDaoInstance={WordDaoInstance} />
+      <Header {...context} wordDaoInstance={WordDaoInstance} />
       <InfoBar {...context} wordDaoInstance={WordDaoInstance} />
       <Footer {...context} />
     </div>
