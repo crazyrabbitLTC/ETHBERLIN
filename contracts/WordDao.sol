@@ -25,6 +25,14 @@ contract WordDao is Initializable, Verify {
         _;
     }
 
+    bool locked;
+    modifier noReentrancy() {
+        require(!locked, "WordDao: Reentrant call");
+        locked = true;
+        _;
+        locked = false;
+    }
+
     mapping(uint256 => string) wordMapping;
 
     event wordAdded(
@@ -84,6 +92,13 @@ contract WordDao is Initializable, Verify {
 
     function getWordDaoBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    
+    event fundsTransfered(address destination, uint256  amount);
+    function withDraw(uint256 _amount,  address payable _destination) public noReentrancy onlyMaster {
+        address(_destination).transfer(_amount);
+        emit fundsTransfered(_destination, _amount);
     }
 
 }
