@@ -1,7 +1,8 @@
 const path = require("path");
 require("dotenv").config();
-const mnemonic = process.env.MNEMONIC;
-const infuraKey = process.env.INFURA_API_KEY;
+const mnemonic = "memonic";
+const infuraKey =
+  process.env.INFURA_API_KEY || "d6760e62b67f4937ba1ea2691046f06d";
 const HDWalletProvider = require("truffle-hdwallet-provider");
 
 module.exports = {
@@ -42,7 +43,7 @@ module.exports = {
           "https://rinkeby.infura.io/v3/" + infuraKey
         ),
       network_id: 4,
-      gas: 3000000,
+      gas: 6465030,
       gasPrice: 10000000000
     },
     // main ethereum network(mainnet)
