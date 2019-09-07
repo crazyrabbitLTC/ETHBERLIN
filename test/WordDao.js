@@ -5,7 +5,7 @@ const {
   shouldFail,
   expectRevert
 } = require("openzeppelin-test-helpers");
-const { signWord } = require("./utils/utils.js");
+const {signWord} = require("./utils/utils.js");
 const should = require("chai").should();
 
 const WordDao = artifacts.require("WordDao");
@@ -24,19 +24,29 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   });
 
   it("can setup a new WordDao", async () => {
-    const { logs } = await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
-    expectEvent.inLogs(logs, "daoSetup", { language, fee, tribute, wordCount });
+    const {logs} = await wordDao.setupDao(
+      language,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+    expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
   });
 
   it("can add a signed word", async () => {
     await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
-    const { logs } = await wordDao.addWord(language, word, signature, {
+    const {logs} = await wordDao.addWord(language, word, signature, {
       from: secondAddress,
       value: tribute
     });
-    expectEvent.inLogs(logs, "wordAdded", {word, tribute, adder: secondAddress});
+    expectEvent.inLogs(logs, "wordAdded", {
+      word,
+      tribute,
+      adder: secondAddress
+    });
   });
 });
 
@@ -51,19 +61,44 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   beforeEach(async () => {
     wordDao = await WordDao.new();
-    const { logs } = await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
-    expectEvent.inLogs(logs, "daoSetup", { language, fee, tribute, wordCount });
+    const {logs} = await wordDao.setupDao(
+      language,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+    expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
   });
-
 
   it("can add a signed word", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
-    const { logs } = await wordDao.addWord(language, word, signature, {
+    const {logs} = await wordDao.addWord(language, word, signature, {
       from: secondAddress,
       value: tribute
     });
-    expectEvent.inLogs(logs, "wordAdded", {word, tribute, adder: secondAddress});
+    expectEvent.inLogs(logs, "wordAdded", {
+      word,
+      tribute,
+      adder: secondAddress
+    });
+  });
+
+  it("will not accept the same word twice", async () => {
+    const word = "love";
+    const signature = await signWord(word, keyPair.privateKey);
+    await wordDao.addWord(language, word, signature, {
+      from: secondAddress,
+      value: tribute
+    });
+    await shouldFail(
+      wordDao.addWord(language, word, signature, {
+        from: secondAddress,
+        value: tribute
+      }),
+      "Word has already been Added."
+    );
   });
 });
 

@@ -7,6 +7,14 @@ import "./WordToken.sol";
 
 contract WordDao is Initializable, Verify {
     //TODO: Decide if the WordDao should delegateCall the requests to the storage, or if the storage should be addressed inidividually.
+    //PROS: DelegateCall would make the code more DRY and the storage units could reduce their code
+    //CONS: might introduce more complexity
+    //TODO: Make everything an upgradable instance
+    //PROS: We can upgrade whenever
+    //CONS?: We need to involve the OZ SDK programatic libray for increased complexity.
+    //TODO: Mint ERC721 Tokens for users that would like them.
+    //TODO: Improve ERC20 minting situation
+    //TODO: Calculate the Tribute to a fixed amount. (Use DAI?)
 
     /********
     Storage Variables
@@ -37,13 +45,6 @@ contract WordDao is Initializable, Verify {
     //Address of the initial Administrator for the WordDao. Once setup, it should be transfered
     //To the DAOController.
     address public owner;
-
-    //Public Getter for if a word Exists. This should either be extracted to the wordStorage,
-    //Or there should be availible functionlity to select by what contract you are addressing.
-    //Arguments for leaving it here is reduced complexity for the Storage contract.
-    //Arguments for putting it on the storage contract is that it kind of 'belongs' there.
-    mapping(string => bool) public wordExists;
-    mapping(uint256 => string) wordMapping;
 
     /********
     MODIFIERS
@@ -176,7 +177,6 @@ contract WordDao is Initializable, Verify {
         storageUnits[_storagePointer].setWord(_word);
         token.transfer(msg.sender, 1);
         contractBalance += msg.value;
-        wordExists[_word] = true;
         emit wordAdded(
             _word,
             storageUnits[_storagePointer].getWordStringToUint256forDao(_word),
