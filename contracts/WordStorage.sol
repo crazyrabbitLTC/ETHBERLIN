@@ -4,20 +4,24 @@ contract WordStorage {
     uint256 public totalWords;
     string public language;
     address public wordDao;
-  
+    address payable public ethReceiver;
     uint256 public fee;
 
     /********
     MODIFIERS
     ********/
+
+    //   Modifier that allows only the WordDao to adminstrate the  storage
     modifier onlyWordDao {
         require(msg.sender == wordDao, "Moloch::onlyMember - not a member");
         _;
     }
 
-    //It might be a good idea that the fee is transfered out of the wordstorage contract
+    // Modifier that requires a payment in the amount equal to the fee, 
+    // And sends the fee off to a predetermined address.
     modifier requireFeePayment {
         require(msg.value >= fee, "Requires Payment");
+        ethReceiver.transfer(msg.value);
         _;
     }
 
@@ -47,15 +51,17 @@ contract WordStorage {
         string language,
         uint256 fee,
         address storageAddress,
-        address wordDao
+        address wordDao,
+        address fundRecipient
     );
     event feeChanged(uint256 fee);
 
-    constructor(string memory _language, uint256 _fee) public {
+    constructor(string memory _language, uint256 _fee,  address payable _ethReceiver) public {
         language = _language;
         wordDao = msg.sender;
         fee = _fee;
-        emit storageCreated(language, fee, address(this), msg.sender);
+        ethReceiver = _ethReceiver;
+        emit storageCreated(language, fee, address(this), msg.sender, ethReceiver);
     }
 
     //only doa
@@ -64,11 +70,7 @@ contract WordStorage {
         emit feeChanged(fee);
     }
 
-    function setWord(string memory _word)
-        public
-        onlyWordDao
-        returns (bool)
-    {
+    function setWord(string memory _word) public onlyWordDao returns (bool) {
         bytes32 _wordBytes32 = keccak256(abi.encodePacked(_word));
         wordByNumber[totalWords] = _word;
         numberForWord[_word] = totalWords;
@@ -150,8 +152,9 @@ contract WordStorage {
     {
         return bytes32ForWordUint256[_wordBytes];
     }
-  //Transfer function incase there is  value  left in the contract
-        function transferEther() external payable onlyWordDao {
-        address(wordDao).transfer(address(this).balance);
+    //Transfer function incase there is  value  left in the contract
+    function transferEther() external payable onlyWordDao {
+        ethReceiver.transfer(address(this).balance);
     }
+    
 }
