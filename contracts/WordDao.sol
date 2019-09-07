@@ -72,19 +72,29 @@ contract WordDao is Initializable, Verify {
     );
 
     event daoMaster(address daoMaster);
-
     event fundsTransfered(address destination, uint256 amount);
+    event daoSetup(
+        string language,
+        uint256 fee,
+        uint256 tribute,
+        uint256 wordCount,
+        address storageContract,
+        address signAuthority
+    );
 
     /********
     FUNCTIONS
     ********/
 
+    //TODO: Make Sign Authority changable
+
     //WordDao Setup
-    function SetupDao(
+    function setupDao(
         string memory _language,
         uint256 _fee,
         uint256 _tribute,
-        uint256 _totalWordCount
+        uint256 _totalWordCount,
+        address _signAuthority
     ) public initializer {
         //Set inital contract values
         owner = msg.sender;
@@ -96,7 +106,16 @@ contract WordDao is Initializable, Verify {
         //Create a  new wordStorage
         wordStorage = new WordStorage(_language, _fee, fundRecipent);
         //Set the address that has the authority to sign new words
-        signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
+        // signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
+        signAuthority = _signAuthority;
+        emit daoSetup(
+            _language,
+            _fee,
+            _tribute,
+            _totalWordCount,
+            address(wordStorage),
+            signAuthority
+        );
     }
 
     //Set the controller of the WordDao.

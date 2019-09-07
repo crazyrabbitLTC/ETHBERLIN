@@ -11,9 +11,9 @@ contract WordStorage {
     MODIFIERS
     ********/
 
-    // Modifier that allows only the WordDao to administer the storage
+    // Modifier that allows only the WordDao to administer the storage, copied from Moloch
     modifier onlyWordDao {
-        require(msg.sender == wordDao, "Moloch::onlyMember - not a member");
+        require(msg.sender == wordDao, "The sender is not the WordDao");
         _;
     }
 
@@ -48,12 +48,12 @@ contract WordStorage {
 
     //wordAdded
     event wordAdded(
-        string _word,
-        address indexed _from,
-        uint256 _wordNumber,
-        bytes32 indexed _wordBytes32
+        string word,
+        address indexed from,
+        uint256 wordNumber,
+        bytes32 indexed wordBytes32
     );
-    event wordRequested(uint256 _wordNumber, address indexed _from);
+    event wordRequested(uint256 wordNumber, address indexed requestor);
     event storageCreated(
         string language,
         uint256 fee,
@@ -112,7 +112,7 @@ contract WordStorage {
     }
 
     /********
-    PUBLIC GETTERS (FOR PAYMENT)
+    PUBLIC GETTERS (FOR PAYMENT) 
     ********/
 
     //Get the integer value of a word, by word
@@ -122,6 +122,7 @@ contract WordStorage {
         requireFeePayment
         returns (uint256)
     {
+        emit wordRequested(numberForWord[_word], msg.sender);
         return numberForWord[_word];
     }
 

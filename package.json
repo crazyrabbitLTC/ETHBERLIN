@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build-contracts": "openzeppelin compile",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
     "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
   },
@@ -37,8 +37,10 @@
     "@openzeppelin/contracts-ethereum-package": "^2.2.3",
     "@openzeppelin/upgrades": "^2.5.1",
     "dotenv": "^6.2.0",
+    "eth-crypto": "^1.4.0",
     "express": "^4.17.1",
-    "truffle-hdwallet-provider": "^1.0.3"
+    "truffle-hdwallet-provider": "^1.0.3",
+    "web3-utils": "^1.2.1"
   },
   "devDependencies": {
     "@openzeppelin/cli": "^2.5.1",
