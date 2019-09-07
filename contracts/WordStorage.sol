@@ -4,7 +4,7 @@ contract WordStorage {
     uint256 public totalWords;
     string public language;
     address public wordDao;
-
+  
     uint256 public fee;
 
     /********
@@ -15,6 +15,7 @@ contract WordStorage {
         _;
     }
 
+    //It might be a good idea that the fee is transfered out of the wordstorage contract
     modifier requireFeePayment {
         require(msg.value >= fee, "Requires Payment");
         _;
@@ -63,15 +64,13 @@ contract WordStorage {
         emit feeChanged(fee);
     }
 
-    // function addWord(string _word, address)
-
-    function setWord(string calldata _word)
-        external
+    function setWord(string memory _word)
+        public
         onlyWordDao
         returns (bool)
     {
         bytes32 _wordBytes32 = keccak256(abi.encodePacked(_word));
-      wordByNumber[totalWords] = _word;
+        wordByNumber[totalWords] = _word;
         numberForWord[_word] = totalWords;
         wordByBytes32[_wordBytes32] = _word;
         bytes32ForWord[_word] = _wordBytes32;
@@ -150,5 +149,9 @@ contract WordStorage {
         returns (uint256)
     {
         return bytes32ForWordUint256[_wordBytes];
+    }
+  //Transfer function incase there is  value  left in the contract
+        function transferEther() external payable onlyWordDao {
+        address(wordDao).transfer(address(this).balance);
     }
 }
