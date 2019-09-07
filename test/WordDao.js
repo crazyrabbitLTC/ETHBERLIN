@@ -125,50 +125,19 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       value: tribute
     });
 
-    const addressBalanceBefore = await web3.eth.getBalance(secondAddress);
-    const gas = new BN(21000);
-    const gasPrice = web3.utils.toWei(new BN(1), "gwei");
-    const cost = gas.mul(gasPrice);
-    const sendAmount = new BN(addressBalanceBefore).sub(cost);
+    const emptyKeypair = web3.eth.accounts.create();
+    const addressBalanceBefore = await web3.eth.getBalance(
+      emptyKeypair.address
+    );
 
-    await web3.eth.sendTransaction({
-      from: secondAddress,
-      to: sender,
-      gas,
-      gasPrice,
-      value: sendAmount
-    });
     const balanceWithOneWord = await wordDao.getWordDaoBalance();
-    await wordDao.withDraw(balanceWithOneWord, secondAddress);
+    await wordDao.withDraw(balanceWithOneWord, emptyKeypair.address);
     const balanceAfter = await wordDao.getWordDaoBalance();
-    const addressBalanceAfter = await web3.eth.getBalance(secondAddress);
+    const addressBalanceAfter = await web3.eth.getBalance(emptyKeypair.address);
 
     expect(balanceAfter.toString()).to.equal(balanceBefore.toString());
-    //expect(addressBalanceAfter.toString()).to.equal(new BN(addressBalanceBefore).add(tribute).add(cost).toString());
+    expect(addressBalanceAfter.toString()).to.equal(
+      new BN(addressBalanceBefore).add(tribute).toString()
+    );
   });
 });
-
-// contract("counter", async ([_, owner, ...otherAccounts]) => {
-//   let counter;
-//   const value = new BN(9999);
-//   const add = new BN(1);
-
-//   beforeEach(async function () {
-//     counter = await Counter.new();
-//     counter.initialize(value, { from: owner });
-//   });
-
-//   it("should have proper owner", async () => {
-//     (await counter.owner()).should.equal(owner);
-//   });
-
-//   it("should have proper default value", async () => {
-//     (await counter.getCounter()).should.bignumber.equal(value);
-//   });
-
-//   it("should increase counter value", async () => {
-//     await counter.increaseCounter(add);
-//     (await counter.getCounter()).should.bignumber.equal(value.add(add));
-//   });
-
-//});
