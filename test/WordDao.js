@@ -115,7 +115,6 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     );
   });
 
-  //TODO: get the exact cost of gas for the transaction.
   it("We can withdraw the balance to an account", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
