@@ -221,6 +221,7 @@ contract WordDao is Initializable, Verify {
     //Utility Function to get the Storage Pointer Name from string into bytes32
     function getStoragePointer(string memory _storageName)
         internal
+        pure
         returns (bytes32)
     {
         return keccak256(abi.encodePacked(_storageName));

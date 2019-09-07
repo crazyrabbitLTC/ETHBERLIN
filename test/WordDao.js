@@ -14,7 +14,7 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   let wordDao;
   const language = "english";
   const fee = new BN(10);
-  const tribute = new BN(11);
+  const tribute = new BN(10000000000);
   const wordCount = new BN(450000);
 
   const keyPair = web3.eth.accounts.create();
@@ -99,6 +99,52 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       }),
       "Word has already been Added."
     );
+  });
+
+  it("the balance of the contract increases when a word is added", async () => {
+    const word = "love";
+    const balanceBefore = await wordDao.getWordDaoBalance();
+    const signature = await signWord(word, keyPair.privateKey);
+    await wordDao.addWord(language, word, signature, {
+      from: secondAddress,
+      value: tribute
+    });
+    const balanceAfter = await wordDao.getWordDaoBalance();
+    expect(balanceAfter.toString()).to.equal(
+      balanceBefore.add(tribute).toString()
+    );
+  });
+
+  //TODO: get the exact cost of gas for the transaction.
+  it("We can withdraw the balance to an account", async () => {
+    const word = "love";
+    const signature = await signWord(word, keyPair.privateKey);
+    const balanceBefore = await wordDao.getWordDaoBalance();
+    await wordDao.addWord(language, word, signature, {
+      from: secondAddress,
+      value: tribute
+    });
+
+    const addressBalanceBefore = await web3.eth.getBalance(secondAddress);
+    const gas = new BN(21000);
+    const gasPrice = web3.utils.toWei(new BN(1), "gwei");
+    const cost = gas.mul(gasPrice);
+    const sendAmount = new BN(addressBalanceBefore).sub(cost);
+
+    await web3.eth.sendTransaction({
+      from: secondAddress,
+      to: sender,
+      gas,
+      gasPrice,
+      value: sendAmount
+    });
+    const balanceWithOneWord = await wordDao.getWordDaoBalance();
+    await wordDao.withDraw(balanceWithOneWord, secondAddress);
+    const balanceAfter = await wordDao.getWordDaoBalance();
+    const addressBalanceAfter = await web3.eth.getBalance(secondAddress);
+
+    expect(balanceAfter.toString()).to.equal(balanceBefore.toString());
+    //expect(addressBalanceAfter.toString()).to.equal(new BN(addressBalanceBefore).add(tribute).add(cost).toString());
   });
 });
 
