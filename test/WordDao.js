@@ -32,7 +32,7 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
-    const { logs } = await wordDao.addWord(word, signature, {
+    const { logs } = await wordDao.addWord(language, word, signature, {
       from: secondAddress,
       value: tribute
     });
@@ -59,7 +59,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   it("can add a signed word", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
-    const { logs } = await wordDao.addWord(word, signature, {
+    const { logs } = await wordDao.addWord(language, word, signature, {
       from: secondAddress,
       value: tribute
     });

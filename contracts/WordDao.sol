@@ -138,7 +138,7 @@ contract WordDao is Initializable, Verify {
             _tribute,
             _totalWordCount,
             address(storageUnits[_storagePointer]),
-            signAuthority
+            signAuthority[_storagePointer]
         );
     }
 
