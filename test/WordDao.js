@@ -10,7 +10,7 @@ const should = require("chai").should();
 
 const WordDao = artifacts.require("WordDao");
 
-contract("WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
+contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   let wordDao;
   const language = "english";
   const fee = new BN(10);
@@ -30,6 +30,33 @@ contract("WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("can add a signed word", async () => {
     await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
+    const word = "love";
+    const signature = await signWord(word, keyPair.privateKey);
+    const { logs } = await wordDao.addWord(word, signature, {
+      from: secondAddress,
+      value: tribute
+    });
+    expectEvent.inLogs(logs, "wordAdded", {word, tribute, adder: secondAddress});
+  });
+});
+
+contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
+  let wordDao;
+  const language = "english";
+  const fee = new BN(10);
+  const tribute = new BN(11);
+  const wordCount = new BN(450000);
+
+  const keyPair = web3.eth.accounts.create();
+
+  beforeEach(async () => {
+    wordDao = await WordDao.new();
+    const { logs } = await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
+    expectEvent.inLogs(logs, "daoSetup", { language, fee, tribute, wordCount });
+  });
+
+
+  it("can add a signed word", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
     const { logs } = await wordDao.addWord(word, signature, {
