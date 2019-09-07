@@ -26,7 +26,7 @@ contract Verify {
         pure
         returns (uint8, bytes32, bytes32)
     {
-        require(sig.length == 65);
+        require(sig.length == 65, "There is an error with the signature length: Verify contract line 29");
         bytes32 r;
         bytes32 s;
         uint8 v;
