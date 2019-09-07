@@ -11,13 +11,13 @@ contract WordStorage {
     MODIFIERS
     ********/
 
-    //   Modifier that allows only the WordDao to adminstrate the  storage
+    // Modifier that allows only the WordDao to administer the storage
     modifier onlyWordDao {
         require(msg.sender == wordDao, "Moloch::onlyMember - not a member");
         _;
     }
 
-    // Modifier that requires a payment in the amount equal to the fee, 
+    // Modifier that requires a payment in the amount equal to the fee,
     // And sends the fee off to a predetermined address.
     modifier requireFeePayment {
         require(msg.value >= fee, "Requires Payment");
@@ -25,7 +25,11 @@ contract WordStorage {
         _;
     }
 
-    //Store words based on Integers
+    /********
+    STORAGE
+    ********/
+
+    //MAPPING
     mapping(uint256 => string) internal wordByNumber;
     mapping(string => uint256) internal numberForWord;
     mapping(bytes32 => string) internal wordByBytes32;
@@ -33,12 +37,15 @@ contract WordStorage {
     mapping(uint256 => bytes32) internal uint256ForBytes32;
     mapping(bytes32 => uint256) internal bytes32ForWordUint256;
 
-    //Arrays
+    //ARRAYS
     bytes32[] internal arrayOfBytes32;
     uint256[] internal arrayOfUint256;
     string[] internal arrayOfWords;
 
-    //events for accessing words
+    /********
+    EVENTS
+    ********/
+
     //wordAdded
     event wordAdded(
         string _word,
@@ -56,15 +63,33 @@ contract WordStorage {
     );
     event feeChanged(uint256 fee);
 
-    constructor(string memory _language, uint256 _fee,  address payable _ethReceiver) public {
+    /********
+    CODE
+    ********/
+
+    constructor(
+        string memory _language,
+        uint256 _fee,
+        address payable _ethReceiver
+    ) public {
         language = _language;
         wordDao = msg.sender;
         fee = _fee;
         ethReceiver = _ethReceiver;
-        emit storageCreated(language, fee, address(this), msg.sender, ethReceiver);
+        emit storageCreated(
+            language,
+            fee,
+            address(this),
+            msg.sender,
+            ethReceiver
+        );
     }
 
-    //only doa
+
+    /********
+    SETTERS
+    ********/
+
     function changeFee(uint256 _fee) external onlyWordDao {
         fee = _fee;
         emit feeChanged(fee);
@@ -87,9 +112,11 @@ contract WordStorage {
         return true;
     }
 
-    //Public Getters
+    /********
+    PUBLIC GETTERS (FOR PAYMENT)
+    ********/
 
-    //getWordStringToUint256
+    //Get the integer value of a word, by word
     function getWordStringToUint256(string calldata _word)
         external
         payable
@@ -99,16 +126,7 @@ contract WordStorage {
         return numberForWord[_word];
     }
 
-    function stringToInt(string calldata _word)
-        external
-        view
-        onlyWordDao
-        returns (uint256)
-    {
-        return numberForWord[_word];
-    }
-
-    //getWordStringToBytes32
+    //Get bytes32 value for a word, by word.
     function getWordStringToBytes32(string calldata _word)
         external
         payable
@@ -116,7 +134,8 @@ contract WordStorage {
     {
         return bytes32ForWord[_word];
     }
-    //getWordUint256ToString
+
+    //Get string value for a word, by integer
     function getWordUint256ToString(uint256 _wordNumber)
         external
         payable
@@ -125,7 +144,8 @@ contract WordStorage {
     {
         return wordByNumber[_wordNumber];
     }
-    //getWordUint256ToBytes32
+
+    //Get bytes32 value for a word, by integer
     function getWordUint256ToBytes32(uint256 _wordNumber)
         external
         payable
@@ -134,7 +154,8 @@ contract WordStorage {
     {
         return uint256ForBytes32[_wordNumber];
     }
-    //getWordBytes32ToString
+
+    //Get string value for a word, by bytes32
     function getWordBytes32ToString(bytes32 _wordBytes)
         external
         payable
@@ -143,7 +164,8 @@ contract WordStorage {
     {
         return wordByBytes32[_wordBytes];
     }
-    //getWordBytes32ToUint256
+
+    //Get integer value for a word, by bytes32
     function getWordBytes32ToUint256(bytes32 _wordBytes)
         external
         payable
@@ -152,9 +174,14 @@ contract WordStorage {
     {
         return bytes32ForWordUint256[_wordBytes];
     }
+
+    /********
+    UTILS
+    ********/
+
     //Transfer function incase there is  value  left in the contract
     function transferEther() external payable onlyWordDao {
         ethReceiver.transfer(address(this).balance);
     }
-    
+
 }
