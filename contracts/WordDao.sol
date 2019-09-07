@@ -6,6 +6,7 @@ import "./WordStorage.sol";
 import "./WordToken.sol";
 
 contract WordDao is Initializable, Verify {
+    //TODO: Decide if the WordDao should delegateCall the requests to the storage, or if the storage should be addressed inidividually.
 
     /********
     Storage Variables
@@ -23,7 +24,7 @@ contract WordDao is Initializable, Verify {
     //The payment required to set a word.
     uint256 public tribute;
 
-    //The signature Authority that is required to have signed the words before adding them. 
+    //The signature Authority that is required to have signed the words before adding them.
     address public signAuthority;
 
     //Address of the Dao contract which controls the WordDao
@@ -34,9 +35,9 @@ contract WordDao is Initializable, Verify {
     address public owner;
 
     //Public Getter for if a word Exists. This should either be extracted to the wordStorage,
-    //Or there should be availible functionlity to select by what contract you are addressing. 
+    //Or there should be availible functionlity to select by what contract you are addressing.
     //Arguments for leaving it here is reduced complexity for the Storage contract.
-    //Arguments for putting it on the storage contract is that it kind of 'belongs' there. 
+    //Arguments for putting it on the storage contract is that it kind of 'belongs' there.
     mapping(string => bool) public wordExists;
     mapping(uint256 => string) wordMapping;
 
@@ -59,7 +60,6 @@ contract WordDao is Initializable, Verify {
         locked = false;
     }
 
-
     /********
     EVENTS
     ********/
@@ -70,41 +70,48 @@ contract WordDao is Initializable, Verify {
         uint256 tribute,
         address adder
     );
+
     event daoMaster(address daoMaster);
 
+    event fundsTransfered(address destination, uint256 amount);
 
     /********
     FUNCTIONS
     ********/
 
     //WordDao Setup
-    function SetupDao(string memory _language, uint256 _fee, uint256 _tribute, uint256 _totalWordCount)
-        public
-        initializer
-    {
+    function SetupDao(
+        string memory _language,
+        uint256 _fee,
+        uint256 _tribute,
+        uint256 _totalWordCount
+    ) public initializer {
         //Set inital contract values
         owner = msg.sender;
         tribute = _tribute;
-      //Setup the token with the tokens availible. This should not be fixed to allow for new words. 
+        //Setup the token with the tokens availible. This should not be fixed to allow for new words.
         token = new WordToken(_totalWordCount);
-      //Cast the address of this contract, the WordDao  to address payable
+        //Cast the address of this contract, the WordDao  to address payable
         address payable fundRecipent = address(uint160(address(this)));
-      //Create a  new wordStorage
+        //Create a  new wordStorage
         wordStorage = new WordStorage(_language, _fee, fundRecipent);
-      //Set the address that has the authority to sign new words
+        //Set the address that has the authority to sign new words
         signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
     }
 
     //Set the controller of the WordDao.
+    //Todo: his needs a more robust system. It should allow for a setup time, a dao, transfer to  down, and renounce control.
     function setMaster(address _dao) public onlyMaster {
         DAOController = _dao;
         emit daoMaster(_dao);
     }
 
     function setOwnerToDao() public onlyMaster {
-      owner = DAOController;
+        owner = DAOController;
     }
 
+    //Add a word to the DAO.
+    //TODO: Allow for Multiple Storage Units
     function addWord(string memory _word, bytes memory signature)
         public
         payable
@@ -119,26 +126,30 @@ contract WordDao is Initializable, Verify {
         wordExists[_word] = true;
         emit wordAdded(
             _word,
-            wordStorage.stringToInt(_word),
+            wordStorage.getWordStringToUint256forDao(_word),
             msg.value,
             msg.sender
         );
     }
 
+    //Set the fee required to access a word.
     function setUseFee(uint256 _fee) external onlyMaster {
         wordStorage.changeFee(_fee);
     }
 
+    //Set the Fee required to add a word.
     function setTributeFee(uint256 _fee) external onlyMaster {
         //In wei
         tribute = _fee;
     }
 
+    //Get the balance of the WordDao Contract itself.
     function getWordDaoBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
-    event fundsTransfered(address destination, uint256 amount);
+    //Withdraw the Balance of the WordDao Contract
+    //There should be a seperate Contract for splitting payments to Token Holders.
     function withDraw(uint256 _amount, address payable _destination)
         public
         noReentrancy

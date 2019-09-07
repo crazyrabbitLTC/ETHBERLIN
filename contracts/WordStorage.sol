@@ -85,7 +85,6 @@ contract WordStorage {
         );
     }
 
-
     /********
     SETTERS
     ********/
@@ -121,6 +120,16 @@ contract WordStorage {
         external
         payable
         requireFeePayment
+        returns (uint256)
+    {
+        return numberForWord[_word];
+    }
+
+    //Get the integer value of a word, by word, allowed only for wordDao
+    function getWordStringToUint256forDao(string calldata _word)
+        external
+        view
+        onlyWordDao
         returns (uint256)
     {
         return numberForWord[_word];
