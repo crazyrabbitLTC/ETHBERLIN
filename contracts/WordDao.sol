@@ -154,7 +154,6 @@ contract WordDao is Initializable, Verify {
     }
 
     //Add a word to the DAO.
-    //TODO: Allow for Multiple Storage Units
     function addWord(
         string memory _language,
         string memory _word,
