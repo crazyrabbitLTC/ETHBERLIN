@@ -55,7 +55,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run prettier:solidity"
+      "pre-push": "npm run prettier:solidity",
+      "pre-commit": "pretty-quick --staged"
     }
   }
 }
