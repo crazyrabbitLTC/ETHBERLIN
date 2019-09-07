@@ -63,13 +63,15 @@ contract WordStorage {
         emit feeChanged(fee);
     }
 
+    // function addWord(string _word, address)
+
     function setWord(string calldata _word)
         external
         onlyWordDao
         returns (bool)
     {
         bytes32 _wordBytes32 = keccak256(abi.encodePacked(_word));
-        wordByNumber[totalWords] = _word;
+      wordByNumber[totalWords] = _word;
         numberForWord[_word] = totalWords;
         wordByBytes32[_wordBytes32] = _word;
         bytes32ForWord[_word] = _wordBytes32;
@@ -78,9 +80,8 @@ contract WordStorage {
         arrayOfBytes32.push(_wordBytes32);
         arrayOfWords.push(_word);
         arrayOfUint256.push(totalWords);
-
-        emit wordAdded(_word, msg.sender, totalWords, _wordBytes32);
         totalWords = totalWords + 1;
+        emit wordAdded(_word, msg.sender, totalWords, _wordBytes32);
 
         return true;
     }
@@ -110,7 +111,6 @@ contract WordStorage {
     function getWordStringToBytes32(string calldata _word)
         external
         payable
-        requireFeePayment
         returns (bytes32)
     {
         return bytes32ForWord[_word];

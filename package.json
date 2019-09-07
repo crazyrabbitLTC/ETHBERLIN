@@ -26,7 +26,7 @@
     "ethereum",
     "smart-contracts"
   ],
-  "author": "Igor Yalovoy <igor@openzeppelin.com>",
+  "author": "Dennison Bertram <igor@openzeppelin.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/OpenZeppelin/starter-kit-gsn/issues"
@@ -49,5 +49,10 @@
     "prettier-plugin-solidity": "^1.0.0-alpha.31",
     "solhint": "^2.2.0",
     "solhint-plugin-prettier": "0.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run prettier:solidity"
+    }
   }
 }

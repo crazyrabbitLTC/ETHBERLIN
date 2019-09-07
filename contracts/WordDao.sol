@@ -94,9 +94,12 @@ contract WordDao is Initializable, Verify {
         return address(this).balance;
     }
 
-    
-    event fundsTransfered(address destination, uint256  amount);
-    function withDraw(uint256 _amount,  address payable _destination) public noReentrancy onlyMaster {
+    event fundsTransfered(address destination, uint256 amount);
+    function withDraw(uint256 _amount, address payable _destination)
+        public
+        noReentrancy
+        onlyMaster
+    {
         address(_destination).transfer(_amount);
         emit fundsTransfered(_destination, _amount);
     }
