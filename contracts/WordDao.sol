@@ -16,16 +16,20 @@ contract WordDao is Initializable, Verify {
     WordToken public token;
 
     //Address of the WordStorage that is created by the WordDao contract
-    WordStorage public wordStorage;
+    //Track Multiple Storage Units
+    mapping(bytes32 => WordStorage) public storageUnits;
+    mapping(bytes32 => string) public storageLanguage;
+    WordStorage[] public storageUnitArray;
+    uint256 public storageCount;
 
-    //Balance of the contract. This should be set to a seperate contract (gnosis safe?)
+    //Balance of this contract. This should be set to a seperate contract (gnosis safe?)
     uint256 public contractBalance;
 
     //The payment required to set a word.
-    uint256 public tribute;
+    mapping(bytes32 => uint256) public tribute;
 
     //The signature Authority that is required to have signed the words before adding them.
-    address public signAuthority;
+    mapping(bytes32 => address) public signAuthority;
 
     //Address of the Dao contract which controls the WordDao
     address public DAOController;
@@ -75,6 +79,7 @@ contract WordDao is Initializable, Verify {
     event fundsTransfered(address destination, uint256 amount);
     event daoSetup(
         string language,
+        bytes32 storagePointer,
         uint256 fee,
         uint256 tribute,
         uint256 wordCount,
@@ -96,24 +101,43 @@ contract WordDao is Initializable, Verify {
         uint256 _totalWordCount,
         address _signAuthority
     ) public initializer {
+        //DRY: Storage pointer
+        bytes32 _storagePointer = getStoragePointer(_language);
+
         //Set inital contract values
         owner = msg.sender;
-        tribute = _tribute;
+        tribute[_storagePointer] = _tribute;
+
         //Setup the token with the tokens availible. This should not be fixed to allow for new words.
         token = new WordToken(_totalWordCount);
+
         //Cast the address of this contract, the WordDao  to address payable
         address payable fundRecipent = address(uint160(address(this)));
-        //Create a  new wordStorage
-        wordStorage = new WordStorage(_language, _fee, fundRecipent);
+
+        //Create a new wordStorage
+        WordStorage wordStorage = new WordStorage(
+            _language,
+            _fee,
+            fundRecipent
+        );
+
+        //Store the created WordStorage in the Storage Units
+        storageUnitArray.push(wordStorage);
+        storageUnits[_storagePointer] = wordStorage;
+        storageLanguage[_storagePointer] = _language;
+        storageCount += 1;
+
         //Set the address that has the authority to sign new words
         // signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
-        signAuthority = _signAuthority;
+        signAuthority[_storagePointer] = _signAuthority;
+
         emit daoSetup(
             _language,
+            _storagePointer,
             _fee,
             _tribute,
             _totalWordCount,
-            address(wordStorage),
+            address(storageUnits[_storagePointer]),
             signAuthority
         );
     }
@@ -131,35 +155,52 @@ contract WordDao is Initializable, Verify {
 
     //Add a word to the DAO.
     //TODO: Allow for Multiple Storage Units
-    function addWord(string memory _word, bytes memory signature)
-        public
-        payable
-    {
-        require(wordExists[_word] == false, "Word has already been Added");
-        require(isValidData(_word, signature, signAuthority), "Word Not Valid");
-        require(msg.value >= tribute, "Tribute not high enough");
+    function addWord(
+        string memory _language,
+        string memory _word,
+        bytes memory signature
+    ) public payable {
+        bytes32 _storagePointer = getStoragePointer(_language);
+        require(
+            storageUnits[_storagePointer].wordExists(_word) == false,
+            "Word has already been Added"
+        );
+        require(
+            isValidData(_word, signature, signAuthority[_storagePointer]),
+            "Word Not Valid"
+        );
+        require(
+            msg.value >= tribute[_storagePointer],
+            "Tribute not high enough"
+        );
 
-        wordStorage.setWord(_word);
+        storageUnits[_storagePointer].setWord(_word);
         token.transfer(msg.sender, 1);
         contractBalance += msg.value;
         wordExists[_word] = true;
         emit wordAdded(
             _word,
-            wordStorage.getWordStringToUint256forDao(_word),
+            storageUnits[_storagePointer].getWordStringToUint256forDao(_word),
             msg.value,
             msg.sender
         );
     }
 
     //Set the fee required to access a word.
-    function setUseFee(uint256 _fee) external onlyMaster {
-        wordStorage.changeFee(_fee);
+    function setUseFee(uint256 _fee, string calldata _language)
+        external
+        onlyMaster
+    {
+        storageUnits[getStoragePointer(_language)].changeFee(_fee);
     }
 
     //Set the Fee required to add a word.
-    function setTributeFee(uint256 _fee) external onlyMaster {
+    function setTributeFee(uint256 _fee, string calldata _language)
+        external
+        onlyMaster
+    {
         //In wei
-        tribute = _fee;
+        tribute[getStoragePointer(_language)] = _fee;
     }
 
     //Get the balance of the WordDao Contract itself.
@@ -176,6 +217,14 @@ contract WordDao is Initializable, Verify {
     {
         address(_destination).transfer(_amount);
         emit fundsTransfered(_destination, _amount);
+    }
+
+    //Utility Function to get the Storage Pointer Name from string into bytes32
+    function getStoragePointer(string memory _storageName)
+        internal
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_storageName));
     }
 
 }

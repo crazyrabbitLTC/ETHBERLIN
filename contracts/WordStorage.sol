@@ -37,6 +37,8 @@ contract WordStorage {
     mapping(uint256 => bytes32) internal uint256ForBytes32;
     mapping(bytes32 => uint256) internal bytes32ForWordUint256;
 
+    mapping(string => bool) public wordExists;
+
     //ARRAYS
     bytes32[] internal arrayOfBytes32;
     uint256[] internal arrayOfUint256;
@@ -106,6 +108,7 @@ contract WordStorage {
         arrayOfWords.push(_word);
         arrayOfUint256.push(totalWords);
         totalWords = totalWords + 1;
+        wordExists[_word] = true;
         emit wordAdded(_word, msg.sender, totalWords, _wordBytes32);
 
         return true;
