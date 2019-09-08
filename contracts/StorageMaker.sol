@@ -7,12 +7,12 @@ contract StorageMaker {
     function makeStorage(
         string memory _language,
         uint256 _fee,
-        address _fundRecipient
+        address payable _fundRecipient
     ) public returns (WordStorage) {
         WordStorage wordStorage = new WordStorage(
             _language,
             _fee,
-            _fundRecipent
+            _fundRecipient
         );
 
         return wordStorage;
