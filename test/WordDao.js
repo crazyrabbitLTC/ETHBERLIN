@@ -35,10 +35,19 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
   });
 
-  it("can add a signed word", async () => {
+  it("can add a signed word with proper tribute", async () => {
     await wordDao.setupDao(language, fee, tribute, wordCount, keyPair.address);
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
+
+    await shouldFail(
+      wordDao.addWord(language, word, signature, {
+        from: secondAddress,
+        value: new BN(0)
+      }),
+      "Tribute not high enough."
+    );
+
     const {logs} = await wordDao.addWord(language, word, signature, {
       from: secondAddress,
       value: tribute
