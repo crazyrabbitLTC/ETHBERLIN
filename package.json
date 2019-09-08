@@ -7,7 +7,8 @@
     "build-contracts": "openzeppelin compile",
     "test": "mocha",
     "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol",
+    "coverage": "./node_modules/.bin/solidity-coverage"
   },
   "repository": {
     "type": "git",
