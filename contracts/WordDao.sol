@@ -21,7 +21,8 @@ contract WordDao is Initializable, Verify {
     ********/
 
     //Address of the ERC20 token that is given to users who contribute words
-    WordToken public token;
+    //WordToken public token;
+    mapping(bytes32 => WordToken) public tokens;
 
     //Address of the WordStorage that is created by the WordDao contract
     //Track Multiple Storage Units
@@ -78,7 +79,7 @@ contract WordDao is Initializable, Verify {
 
     event daoMaster(address daoMaster);
     event fundsTransfered(address destination, uint256 amount);
-    event daoSetup(
+    event storageCreated(
         string language,
         bytes32 storagePointer,
         uint256 fee,
@@ -105,44 +106,31 @@ contract WordDao is Initializable, Verify {
         uint256 _totalWordCount,
         address _signAuthority
     ) public initializer {
-        //DRY: Storage pointer
-        bytes32 _storagePointer = getStoragePointer(_language);
-
         //Set inital contract values
         owner = msg.sender;
-        tribute[_storagePointer] = _tribute;
 
-        //Setup the token with the tokens availible. This should not be fixed to allow for new words.
-        token = new WordToken(_totalWordCount);
-
-        //Cast the address of this contract, the WordDao  to address payable
-        address payable fundRecipent = address(uint160(address(this)));
-
-        //Create a new wordStorage
-        WordStorage wordStorage = new WordStorage(
+        _createStorage(
             _language,
-            _fee,
-            fundRecipent
-        );
-
-        //Store the created WordStorage in the Storage Units
-        storageUnitArray.push(wordStorage);
-        storageUnits[_storagePointer] = wordStorage;
-        storageLanguage[_storagePointer] = _language;
-        storageCount += 1;
-
-        //Set the address that has the authority to sign new words
-        // signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
-        signAuthority[_storagePointer] = _signAuthority;
-
-        emit daoSetup(
-            _language,
-            _storagePointer,
             _fee,
             _tribute,
             _totalWordCount,
-            address(storageUnits[_storagePointer]),
-            signAuthority[_storagePointer]
+            _signAuthority
+        );
+    }
+
+    function addWordStorage(
+        string memory _language,
+        uint256 _fee,
+        uint256 _tribute,
+        uint256 _totalWordCount,
+        address _signAuthority
+    ) public onlyMaster {
+        _createStorage(
+            _language,
+            _fee,
+            _tribute,
+            _totalWordCount,
+            _signAuthority
         );
     }
 
@@ -178,7 +166,7 @@ contract WordDao is Initializable, Verify {
         );
 
         storageUnits[_storagePointer].setWord(_word);
-        token.transfer(msg.sender, 1);
+        tokens[_storagePointer].transfer(msg.sender, 1);
         contractBalance += msg.value;
         emit wordAdded(
             _word,
@@ -235,6 +223,57 @@ contract WordDao is Initializable, Verify {
         returns (bytes32)
     {
         return keccak256(abi.encodePacked(_storageName));
+    }
+
+    function _createStorage(
+        string memory _language,
+        uint256 _fee,
+        uint256 _tribute,
+        uint256 _totalWordCount,
+        address _signAuthority
+    ) internal {
+        //DRY: Storage pointer
+        bytes32 _storagePointer = getStoragePointer(_language);
+        tribute[_storagePointer] = _tribute;
+        //Setup the token with the tokens availible. This should be fixed to fix token supply.
+        //Need to Extract this part to a new internal function
+        WordToken tempToken = new WordToken(
+            _totalWordCount,
+            _language,
+            _language
+        );
+        tokens[_storagePointer] = tempToken;
+
+        //Cast the address of this contract, the WordDao  to address payable
+        address payable fundRecipent = address(uint160(address(this)));
+
+        //Create a new wordStorage
+        //TODO: Explore using Create2 to create wordStorage, this way we can predict their locations
+        WordStorage wordStorage = new WordStorage(
+            _language,
+            _fee,
+            fundRecipent
+        );
+
+        //Store the created WordStorage in the Storage Units
+        storageUnitArray.push(wordStorage);
+        storageUnits[_storagePointer] = wordStorage;
+        storageLanguage[_storagePointer] = _language;
+        storageCount += 1;
+
+        //Set the address that has the authority to sign new words
+        // signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
+        signAuthority[_storagePointer] = _signAuthority;
+
+        emit storageCreated(
+            _language,
+            _storagePointer,
+            _fee,
+            _tribute,
+            _totalWordCount,
+            address(storageUnits[_storagePointer]),
+            signAuthority[_storagePointer]
+        );
     }
 
 }
