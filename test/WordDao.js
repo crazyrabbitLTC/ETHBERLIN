@@ -13,6 +13,7 @@ const WordDao = artifacts.require("WordDao");
 contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   let wordDao;
   const language = "english";
+
   const fee = new BN(10);
   const tribute = new BN(10000000000);
   const wordCount = new BN(450000);
@@ -52,6 +53,8 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
 contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   let wordDao;
+  let storagePointer;
+  let mock;
   const language = "english";
   const fee = new BN(10);
   const tribute = new BN(11);
@@ -68,7 +71,12 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       wordCount,
       keyPair.address
     );
-    expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
+
+    storagePointer = logs[0].args["storagePointer"];
+
+    //console.log("The logs: ", logs[0].args["storagePointer"]);
+    //let mock = await MOCK.new(WordDao.address);
+    //expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
   });
 
   it("can add a signed word", async () => {
@@ -83,6 +91,25 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       adder: secondAddress
     });
+  });
+
+  it("will not allow illegal words to be added", async () => {
+    const word = "love";
+    const keyPair2 = web3.eth.accounts.create();
+    const signature = await signWord(word, keyPair2.privateKey);
+    await shouldFail(
+      wordDao.addWord(language, word, signature, {
+        from: secondAddress,
+        value: tribute
+      }),
+      "Word Not Valid."
+    );
+    await shouldFail(
+      wordDao.addWord(language, word, signature, {
+        from: secondAddress
+      }),
+      "Tribute not high enough"
+    );
   });
 
   it("will not accept the same word twice", async () => {
@@ -115,7 +142,41 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     );
   });
 
-  it("We can withdraw the balance to an account", async () => {
+  it("can change the value  of the Tribute fee", async () => {
+    const newFee = new BN(200);
+    const {logs} = await wordDao.setTributeFee(newFee, language);
+    expectEvent.inLogs(logs, "setTribute", {fee: newFee, language: language});
+  });
+
+  it("can change the value  of the access fee", async () => {
+    const newFee = new BN(200);
+    const {logs} = await wordDao.setUseFee(newFee, language);
+    expectEvent.inLogs(logs, "setFee", {fee: newFee, language: language});
+  });
+
+  it("can change the owner to the DAOController", async () => {
+    const daoController = await wordDao.DAOController();
+    const owner = await wordDao.owner();
+
+    await wordDao.setOwnerToDao();
+
+    const ownerAfter = await wordDao.owner();
+    expect(owner).to.not.be.equal(ownerAfter);
+    expect(ownerAfter).to.be.equal(daoController);
+  });
+
+  it("Can set the master Dao Address to a new address", async () => {
+    const keyPair = web3.eth.accounts.create();
+
+    const daoController = await wordDao.DAOController();
+    const {logs} = await wordDao.setMaster(keyPair.address);
+    const daoControllerAfter = await wordDao.DAOController();
+    expectEvent.inLogs(logs, "daoMaster", {daoMaster: keyPair.address});
+    expect(daoController).to.not.be.equal(daoControllerAfter);
+    expect(daoControllerAfter).to.be.equal(keyPair.address);
+  });
+
+  it("We can withdraw the balance to an account with proper arugements", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
     const balanceBefore = await wordDao.getWordDaoBalance();
@@ -130,6 +191,26 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     );
 
     const balanceWithOneWord = await wordDao.getWordDaoBalance();
+
+    //Expect failure when using an unauthorized address
+    await shouldFail(
+      wordDao.withDraw(balanceWithOneWord, emptyKeypair.address, {
+        from: secondAddress
+      }),
+      "WordDao:: Only Master DAO can Control"
+    );
+    await shouldFail(
+      wordDao.withDraw(new BN(0), emptyKeypair.address),
+      "Amount must be greater than zero"
+    );
+    await shouldFail(
+      wordDao.withDraw(
+        new BN(balanceWithOneWord).add(new BN(1000)),
+        emptyKeypair.address
+      ),
+      "Amount must be less than or equal to balance"
+    );
+
     await wordDao.withDraw(balanceWithOneWord, emptyKeypair.address);
     const balanceAfter = await wordDao.getWordDaoBalance();
     const addressBalanceAfter = await web3.eth.getBalance(emptyKeypair.address);

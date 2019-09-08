@@ -1,37 +1,37 @@
 {
   "contracts/Verify.sol": {
     "l": {
-      "9": 5,
-      "10": 5,
-      "18": 5,
-      "19": 5,
-      "20": 5,
-      "21": 5,
-      "22": 5,
-      "29": 5,
-      "33": 5,
-      "34": 5,
-      "35": 5,
-      "36": 5,
-      "44": 5
+      "9": 9,
+      "10": 9,
+      "18": 9,
+      "19": 9,
+      "20": 9,
+      "21": 9,
+      "22": 9,
+      "29": 10,
+      "33": 9,
+      "34": 9,
+      "35": 9,
+      "36": 9,
+      "44": 9
     },
     "path": "/Users/dennison/Documents/ETHBERLIN/contracts/Verify.sol",
     "s": {
-      "1": 5,
-      "2": 5,
-      "3": 5,
-      "4": 5,
-      "5": 5,
-      "6": 5,
-      "7": 5,
-      "8": 5,
-      "9": 5,
-      "10": 5,
-      "11": 5,
-      "12": 5
+      "1": 9,
+      "2": 9,
+      "3": 9,
+      "4": 9,
+      "5": 9,
+      "6": 9,
+      "7": 9,
+      "8": 10,
+      "9": 9,
+      "10": 9,
+      "11": 9,
+      "12": 9
     },
-    "b": {"1": [5, 0]},
-    "f": {"1": 5, "2": 5, "3": 5},
+    "b": {"1": [9, 1]},
+    "f": {"1": 9, "2": 9, "3": 10},
     "fnMap": {
       "1": {
         "name": "isValidData",
@@ -124,91 +124,107 @@
   },
   "contracts/WordDao.sol": {
     "l": {
-      "55": 1,
-      "56": 1,
-      "62": 1,
-      "63": 1,
-      "64": 1,
+      "55": 11,
+      "56": 9,
+      "62": 7,
+      "63": 7,
+      "64": 7,
       "65": 1,
-      "106": 6,
-      "109": 6,
-      "110": 6,
-      "113": 6,
-      "116": 6,
-      "119": 6,
-      "126": 6,
-      "127": 6,
-      "128": 6,
-      "129": 6,
-      "133": 6,
-      "135": 6,
-      "149": 0,
-      "150": 0,
-      "154": 0,
-      "163": 7,
-      "164": 7,
-      "168": 5,
-      "172": 5,
-      "177": 5,
-      "178": 5,
-      "179": 5,
+      "109": 11,
+      "112": 11,
+      "113": 11,
+      "116": 11,
+      "119": 11,
+      "122": 11,
+      "129": 11,
+      "130": 11,
+      "131": 11,
+      "132": 11,
+      "136": 11,
+      "138": 11,
+      "152": 1,
+      "153": 1,
+      "157": 1,
+      "166": 11,
+      "167": 11,
+      "171": 9,
+      "175": 5,
       "180": 5,
-      "193": 0,
-      "202": 0,
-      "207": 5,
-      "217": 1,
-      "218": 1,
-      "227": 13
+      "181": 5,
+      "182": 5,
+      "183": 5,
+      "196": 1,
+      "197": 1,
+      "206": 1,
+      "207": 1,
+      "212": 5,
+      "222": 5,
+      "223": 3,
+      "224": 1,
+      "225": 1,
+      "234": 24
     },
     "path": "/Users/dennison/Documents/ETHBERLIN/contracts/WordDao.sol",
     "s": {
-      "1": 1,
-      "2": 1,
-      "3": 1,
+      "1": 11,
+      "2": 7,
+      "3": 7,
       "4": 1,
-      "5": 6,
-      "6": 6,
-      "7": 6,
-      "8": 6,
-      "9": 6,
-      "10": 6,
-      "11": 6,
-      "12": 6,
-      "13": 6,
-      "14": 6,
-      "15": 6,
-      "16": 6,
-      "17": 0,
-      "18": 0,
-      "19": 0,
-      "20": 7,
-      "21": 7,
-      "22": 5,
+      "5": 11,
+      "6": 11,
+      "7": 11,
+      "8": 11,
+      "9": 11,
+      "10": 11,
+      "11": 11,
+      "12": 11,
+      "13": 11,
+      "14": 11,
+      "15": 11,
+      "16": 11,
+      "17": 1,
+      "18": 1,
+      "19": 1,
+      "20": 11,
+      "21": 11,
+      "22": 9,
       "23": 5,
       "24": 5,
       "25": 5,
       "26": 5,
       "27": 5,
-      "28": 0,
-      "29": 0,
-      "30": 5,
+      "28": 1,
+      "29": 1,
+      "30": 1,
       "31": 1,
-      "32": 1,
-      "33": 13
+      "32": 5,
+      "33": 5,
+      "34": 3,
+      "35": 1,
+      "36": 1,
+      "37": 24
     },
-    "b": {"1": [1, 0], "2": [1, 0], "3": [5, 2], "4": [5, 0], "5": [5, 0]},
+    "b": {
+      "1": [9, 2],
+      "2": [7, 0],
+      "3": [9, 2],
+      "4": [5, 4],
+      "5": [5, 0],
+      "6": [3, 2],
+      "7": [1, 2]
+    },
     "f": {
-      "1": 1,
-      "2": 1,
-      "3": 6,
-      "4": 0,
-      "5": 0,
-      "6": 7,
-      "7": 0,
-      "8": 0,
+      "1": 11,
+      "2": 7,
+      "3": 11,
+      "4": 1,
+      "5": 1,
+      "6": 11,
+      "7": 1,
+      "8": 1,
       "9": 5,
-      "10": 1,
-      "11": 13
+      "10": 5,
+      "11": 24
     },
     "fnMap": {
       "1": {
@@ -229,74 +245,74 @@
       },
       "3": {
         "name": "setupDao",
-        "line": 98,
+        "line": 101,
         "loc": {
-          "start": {"line": 98, "column": 4},
-          "end": {"line": 104, "column": 26}
+          "start": {"line": 101, "column": 4},
+          "end": {"line": 107, "column": 26}
         }
       },
       "4": {
         "name": "setMaster",
-        "line": 148,
+        "line": 151,
         "loc": {
-          "start": {"line": 148, "column": 4},
-          "end": {"line": 148, "column": 52}
+          "start": {"line": 151, "column": 4},
+          "end": {"line": 151, "column": 52}
         }
       },
       "5": {
         "name": "setOwnerToDao",
-        "line": 153,
+        "line": 156,
         "loc": {
-          "start": {"line": 153, "column": 4},
-          "end": {"line": 153, "column": 44}
+          "start": {"line": 156, "column": 4},
+          "end": {"line": 156, "column": 44}
         }
       },
       "6": {
         "name": "addWord",
-        "line": 158,
+        "line": 161,
         "loc": {
-          "start": {"line": 158, "column": 4},
-          "end": {"line": 162, "column": 22}
+          "start": {"line": 161, "column": 4},
+          "end": {"line": 165, "column": 22}
         }
       },
       "7": {
         "name": "setUseFee",
-        "line": 189,
+        "line": 192,
         "loc": {
-          "start": {"line": 189, "column": 4},
-          "end": {"line": 192, "column": 5}
+          "start": {"line": 192, "column": 4},
+          "end": {"line": 195, "column": 5}
         }
       },
       "8": {
         "name": "setTributeFee",
-        "line": 197,
+        "line": 201,
         "loc": {
-          "start": {"line": 197, "column": 4},
-          "end": {"line": 200, "column": 5}
+          "start": {"line": 201, "column": 4},
+          "end": {"line": 204, "column": 5}
         }
       },
       "9": {
         "name": "getWordDaoBalance",
-        "line": 206,
+        "line": 211,
         "loc": {
-          "start": {"line": 206, "column": 4},
-          "end": {"line": 206, "column": 60}
+          "start": {"line": 211, "column": 4},
+          "end": {"line": 211, "column": 60}
         }
       },
       "10": {
         "name": "withDraw",
-        "line": 212,
+        "line": 217,
         "loc": {
-          "start": {"line": 212, "column": 4},
-          "end": {"line": 216, "column": 5}
+          "start": {"line": 217, "column": 4},
+          "end": {"line": 221, "column": 5}
         }
       },
       "11": {
         "name": "getStoragePointer",
-        "line": 222,
+        "line": 229,
         "loc": {
-          "start": {"line": 222, "column": 4},
-          "end": {"line": 226, "column": 5}
+          "start": {"line": 229, "column": 4},
+          "end": {"line": 233, "column": 5}
         }
       }
     },
@@ -318,120 +334,136 @@
         "end": {"line": 65, "column": 21}
       },
       "5": {
-        "start": {"line": 106, "column": 8},
-        "end": {"line": 106, "column": 62}
+        "start": {"line": 109, "column": 8},
+        "end": {"line": 109, "column": 62}
       },
       "6": {
-        "start": {"line": 109, "column": 8},
-        "end": {"line": 109, "column": 25}
+        "start": {"line": 112, "column": 8},
+        "end": {"line": 112, "column": 25}
       },
       "7": {
-        "start": {"line": 110, "column": 8},
-        "end": {"line": 110, "column": 42}
+        "start": {"line": 113, "column": 8},
+        "end": {"line": 113, "column": 42}
       },
       "8": {
-        "start": {"line": 113, "column": 8},
-        "end": {"line": 113, "column": 45}
+        "start": {"line": 116, "column": 8},
+        "end": {"line": 116, "column": 45}
       },
       "9": {
-        "start": {"line": 116, "column": 8},
-        "end": {"line": 116, "column": 70}
+        "start": {"line": 119, "column": 8},
+        "end": {"line": 119, "column": 70}
       },
       "10": {
-        "start": {"line": 119, "column": 8},
-        "end": {"line": 119, "column": 3748}
+        "start": {"line": 122, "column": 8},
+        "end": {"line": 122, "column": 3849}
       },
       "11": {
-        "start": {"line": 126, "column": 8},
-        "end": {"line": 126, "column": 41}
+        "start": {"line": 129, "column": 8},
+        "end": {"line": 129, "column": 41}
       },
       "12": {
-        "start": {"line": 127, "column": 8},
-        "end": {"line": 127, "column": 50}
+        "start": {"line": 130, "column": 8},
+        "end": {"line": 130, "column": 50}
       },
       "13": {
-        "start": {"line": 128, "column": 8},
-        "end": {"line": 128, "column": 51}
+        "start": {"line": 131, "column": 8},
+        "end": {"line": 131, "column": 51}
       },
       "14": {
-        "start": {"line": 129, "column": 8},
-        "end": {"line": 129, "column": 24}
+        "start": {"line": 132, "column": 8},
+        "end": {"line": 132, "column": 24}
       },
       "15": {
-        "start": {"line": 133, "column": 8},
-        "end": {"line": 133, "column": 54}
+        "start": {"line": 136, "column": 8},
+        "end": {"line": 136, "column": 54}
       },
       "16": {
-        "start": {"line": 135, "column": 8},
-        "end": {"line": 135, "column": 4322}
+        "start": {"line": 138, "column": 8},
+        "end": {"line": 138, "column": 4423}
       },
       "17": {
-        "start": {"line": 149, "column": 8},
-        "end": {"line": 149, "column": 27}
+        "start": {"line": 152, "column": 8},
+        "end": {"line": 152, "column": 27}
       },
       "18": {
-        "start": {"line": 150, "column": 8},
-        "end": {"line": 150, "column": 28}
+        "start": {"line": 153, "column": 8},
+        "end": {"line": 153, "column": 28}
       },
       "19": {
-        "start": {"line": 154, "column": 8},
-        "end": {"line": 154, "column": 28}
+        "start": {"line": 157, "column": 8},
+        "end": {"line": 157, "column": 28}
       },
       "20": {
-        "start": {"line": 163, "column": 8},
-        "end": {"line": 163, "column": 62}
+        "start": {"line": 166, "column": 8},
+        "end": {"line": 166, "column": 62}
       },
       "21": {
-        "start": {"line": 164, "column": 8},
-        "end": {"line": 164, "column": 5187}
+        "start": {"line": 167, "column": 8},
+        "end": {"line": 167, "column": 5288}
       },
       "22": {
-        "start": {"line": 168, "column": 8},
-        "end": {"line": 168, "column": 5327}
+        "start": {"line": 171, "column": 8},
+        "end": {"line": 171, "column": 5428}
       },
       "23": {
-        "start": {"line": 172, "column": 8},
-        "end": {"line": 172, "column": 5459}
+        "start": {"line": 175, "column": 8},
+        "end": {"line": 175, "column": 5560}
       },
       "24": {
-        "start": {"line": 177, "column": 8},
-        "end": {"line": 177, "column": 51}
+        "start": {"line": 180, "column": 8},
+        "end": {"line": 180, "column": 51}
       },
       "25": {
-        "start": {"line": 178, "column": 8},
-        "end": {"line": 178, "column": 36}
+        "start": {"line": 181, "column": 8},
+        "end": {"line": 181, "column": 36}
       },
       "26": {
-        "start": {"line": 179, "column": 8},
-        "end": {"line": 179, "column": 35}
+        "start": {"line": 182, "column": 8},
+        "end": {"line": 182, "column": 35}
       },
       "27": {
-        "start": {"line": 180, "column": 8},
-        "end": {"line": 180, "column": 5709}
+        "start": {"line": 183, "column": 8},
+        "end": {"line": 183, "column": 5810}
       },
       "28": {
-        "start": {"line": 193, "column": 8},
-        "end": {"line": 193, "column": 65}
+        "start": {"line": 196, "column": 8},
+        "end": {"line": 196, "column": 36}
       },
       "29": {
-        "start": {"line": 202, "column": 8},
-        "end": {"line": 202, "column": 51}
+        "start": {"line": 197, "column": 8},
+        "end": {"line": 197, "column": 65}
       },
       "30": {
-        "start": {"line": 207, "column": 8},
-        "end": {"line": 207, "column": 36}
+        "start": {"line": 206, "column": 8},
+        "end": {"line": 206, "column": 51}
       },
       "31": {
-        "start": {"line": 217, "column": 8},
-        "end": {"line": 217, "column": 46}
+        "start": {"line": 207, "column": 8},
+        "end": {"line": 207, "column": 40}
       },
       "32": {
-        "start": {"line": 218, "column": 8},
-        "end": {"line": 218, "column": 51}
+        "start": {"line": 212, "column": 8},
+        "end": {"line": 212, "column": 36}
       },
       "33": {
-        "start": {"line": 227, "column": 8},
-        "end": {"line": 227, "column": 56}
+        "start": {"line": 222, "column": 8},
+        "end": {"line": 222, "column": 64}
+      },
+      "34": {
+        "start": {"line": 223, "column": 8},
+        "end": {"line": 223, "column": 96}
+      },
+      "35": {
+        "start": {"line": 224, "column": 8},
+        "end": {"line": 224, "column": 46}
+      },
+      "36": {
+        "start": {"line": 225, "column": 8},
+        "end": {"line": 225, "column": 51}
+      },
+      "37": {
+        "start": {"line": 234, "column": 8},
+        "end": {"line": 234, "column": 56}
       }
     },
     "branchMap": {
@@ -458,44 +490,72 @@
         ]
       },
       "3": {
-        "line": 164,
+        "line": 167,
         "type": "if",
         "locations": [
           {
-            "start": {"line": 164, "column": 8},
-            "end": {"line": 164, "column": 8}
+            "start": {"line": 167, "column": 8},
+            "end": {"line": 167, "column": 8}
           },
           {
-            "start": {"line": 164, "column": 8},
-            "end": {"line": 164, "column": 8}
+            "start": {"line": 167, "column": 8},
+            "end": {"line": 167, "column": 8}
           }
         ]
       },
       "4": {
-        "line": 168,
+        "line": 171,
         "type": "if",
         "locations": [
           {
-            "start": {"line": 168, "column": 8},
-            "end": {"line": 168, "column": 8}
+            "start": {"line": 171, "column": 8},
+            "end": {"line": 171, "column": 8}
           },
           {
-            "start": {"line": 168, "column": 8},
-            "end": {"line": 168, "column": 8}
+            "start": {"line": 171, "column": 8},
+            "end": {"line": 171, "column": 8}
           }
         ]
       },
       "5": {
-        "line": 172,
+        "line": 175,
         "type": "if",
         "locations": [
           {
-            "start": {"line": 172, "column": 8},
-            "end": {"line": 172, "column": 8}
+            "start": {"line": 175, "column": 8},
+            "end": {"line": 175, "column": 8}
           },
           {
-            "start": {"line": 172, "column": 8},
-            "end": {"line": 172, "column": 8}
+            "start": {"line": 175, "column": 8},
+            "end": {"line": 175, "column": 8}
+          }
+        ]
+      },
+      "6": {
+        "line": 222,
+        "type": "if",
+        "locations": [
+          {
+            "start": {"line": 222, "column": 8},
+            "end": {"line": 222, "column": 8}
+          },
+          {
+            "start": {"line": 222, "column": 8},
+            "end": {"line": 222, "column": 8}
+          }
+        ]
+      },
+      "7": {
+        "line": 223,
+        "type": "if",
+        "locations": [
+          {
+            "start": {"line": 223, "column": 8},
+            "end": {"line": 223, "column": 8}
+          },
+          {
+            "start": {"line": 223, "column": 8},
+            "end": {"line": 223, "column": 8}
           }
         ]
       }
@@ -503,18 +563,18 @@
   },
   "contracts/WordStorage.sol": {
     "l": {
-      "16": 28,
-      "17": 24,
+      "16": 29,
+      "17": 25,
       "23": 9,
       "24": 5,
       "25": 5,
-      "77": 16,
-      "78": 16,
-      "79": 16,
-      "80": 16,
-      "81": 16,
-      "95": 1,
-      "96": 1,
+      "77": 21,
+      "78": 21,
+      "79": 21,
+      "80": 21,
+      "81": 21,
+      "95": 2,
+      "96": 2,
       "100": 15,
       "101": 15,
       "102": 15,
@@ -545,16 +605,16 @@
     },
     "path": "/Users/dennison/Documents/ETHBERLIN/contracts/WordStorage.sol",
     "s": {
-      "1": 28,
+      "1": 29,
       "2": 9,
       "3": 5,
-      "4": 16,
-      "5": 16,
-      "6": 16,
-      "7": 16,
-      "8": 16,
-      "9": 1,
-      "10": 1,
+      "4": 21,
+      "5": 21,
+      "6": 21,
+      "7": 21,
+      "8": 21,
+      "9": 2,
+      "10": 2,
       "11": 15,
       "12": 15,
       "13": 15,
@@ -583,12 +643,12 @@
       "36": 1,
       "37": 1
     },
-    "b": {"1": [24, 4], "2": [5, 4]},
+    "b": {"1": [25, 4], "2": [5, 4]},
     "f": {
-      "1": 28,
+      "1": 29,
       "2": 9,
-      "3": 16,
-      "4": 1,
+      "3": 21,
+      "4": 2,
       "5": 15,
       "6": 8,
       "7": 1,
@@ -872,11 +932,11 @@
     }
   },
   "contracts/WordToken.sol": {
-    "l": {"11": 7},
+    "l": {"11": 12},
     "path": "/Users/dennison/Documents/ETHBERLIN/contracts/WordToken.sol",
-    "s": {"1": 7},
+    "s": {"1": 12},
     "b": {},
-    "f": {"1": 7},
+    "f": {"1": 12},
     "fnMap": {
       "1": {
         "name": "constructor",

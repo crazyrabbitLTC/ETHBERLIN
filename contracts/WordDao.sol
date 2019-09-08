@@ -88,6 +88,9 @@ contract WordDao is Initializable, Verify {
         address signAuthority
     );
 
+    event setTribute(uint256 fee, string language);
+    event setFee(uint256 fee, string language);
+
     /********
     FUNCTIONS
     ********/
@@ -190,6 +193,7 @@ contract WordDao is Initializable, Verify {
         external
         onlyMaster
     {
+        emit setFee(_fee, _language);
         storageUnits[getStoragePointer(_language)].changeFee(_fee);
     }
 
@@ -200,6 +204,7 @@ contract WordDao is Initializable, Verify {
     {
         //In wei
         tribute[getStoragePointer(_language)] = _fee;
+        emit setTribute(_fee, _language);
     }
 
     //Get the balance of the WordDao Contract itself.
@@ -214,6 +219,11 @@ contract WordDao is Initializable, Verify {
         noReentrancy
         onlyMaster
     {
+        require(_amount > 0, "Amount must be greater than zero");
+        require(
+            _amount <= address(this).balance,
+            "Amount must be less than or equal to balance"
+        );
         address(_destination).transfer(_amount);
         emit fundsTransfered(_destination, _amount);
     }
