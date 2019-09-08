@@ -18,6 +18,7 @@ contract(
     let fee = new BN(10);
     let receiver = web3.eth.accounts.create();
     const word = "hello";
+    const wordBytes32 = web3.utils.fromAscii(word);
     const word2 = "goodbye";
     const word3 = "love";
 
@@ -34,24 +35,24 @@ contract(
     it("Should allow to Change Fee only from WordDao Address", async () => {
       const newFee = new BN(11);
       const newFee2 = new BN(12);
-      const { logs } = await wordStorage.changeFee(newFee);
-      expectEvent.inLogs(logs, "feeChanged", { fee: newFee });
+      const {logs} = await wordStorage.changeFee(newFee);
+      expectEvent.inLogs(logs, "feeChanged", {fee: newFee});
       await shouldFail(
-        wordStorage.changeFee(newFee2, { from: secondAddress }),
+        wordStorage.changeFee(newFee2, {from: secondAddress}),
         "The sender is not the WordDao"
       );
     });
 
     it("Should allow only the WordDao to add a word", async () => {
-      const { logs } = await wordStorage.setWord(word, { from: firstAddress });
-      expectEvent.inLogs(logs, "wordAdded", { word: word, from: firstAddress });
-      await shouldFail(wordStorage.setWord(word2, { from: secondAddress }));
+      const {logs} = await wordStorage.setWord(word, {from: firstAddress});
+      expectEvent.inLogs(logs, "wordAdded", {word: word, from: firstAddress});
+      await shouldFail(wordStorage.setWord(word2, {from: secondAddress}));
     });
 
-    it("Should return the correct Integer for a word (for the WordDao)", async () => {
-      await wordStorage.setWord(word, { from: firstAddress });
-      await wordStorage.setWord(word2, { from: firstAddress });
-      await wordStorage.setWord(word3, { from: firstAddress });
+    it("Should find the correct Integer for a word (for the WordDao)", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+      await wordStorage.setWord(word2, {from: firstAddress});
+      await wordStorage.setWord(word3, {from: firstAddress});
 
       (await wordStorage.getWordStringToUint256forDao(
         word
@@ -64,8 +65,8 @@ contract(
       )).should.bignumber.equal(new BN(2));
     });
 
-    it("Should return the correct Integer only when paid for access", async () => {
-      await wordStorage.setWord(word, { from: firstAddress });
+    it("Should find the correct Integer only when paid for access", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
 
       const tx = await wordStorage.getWordStringToUint256(word, {
         from: secondAddress,
@@ -82,7 +83,71 @@ contract(
         })
       );
     });
+
+    it("Should find the correct Integer only when paid for access", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+
+      const {logs} = await wordStorage.getWordUint256ToString(new BN(0), {
+        from: secondAddress,
+        value: new BN(20)
+      });
+
+      expectEvent.inLogs(logs, "wordRequested", {
+        wordNumber: new BN(0),
+        requestor: secondAddress
+      });
+      await shouldFail(
+        wordStorage.getWordStringToUint256(word, {
+          from: secondAddress
+        })
+      );
+    });
+
+    it("Should find the correct word when sent as bytes32", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+
+      const {logs} = await wordStorage.getWordBytes32ToString(wordBytes32, {
+        from: secondAddress,
+        value: new BN(20)
+      });
+
+      expectEvent.inLogs(logs, "wordRequested", {
+        wordNumber: new BN(0),
+        requestor: secondAddress
+      });
+    });
+
+    it("Should find the correct word Integer when sent as bytes32", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+
+      const {logs} = await wordStorage.getWordBytes32ToUint256(wordBytes32, {
+        from: secondAddress,
+        value: new BN(20)
+      });
+
+      expectEvent.inLogs(logs, "wordRequested", {
+        wordNumber: new BN(0),
+        requestor: secondAddress
+      });
+    });
+
+    it("Should transfer any value in the contract to the ethReceiver", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+      const balance = await web3.eth.getBalance(receiver.address);
+
+      const {logs} = await wordStorage.getWordBytes32ToUint256(wordBytes32, {
+        from: secondAddress,
+        value: new BN(200000000)
+      });
+
+      const contractBalance = await web3.eth.getBalance(wordStorage.address);
+      await wordStorage.transferEther();
+      const balance2 = await web3.eth.getBalance(receiver.address);
+
+      console.log(
+        `Inital Address BAalnce: ${balance} after address balance: ${balance2}  and the contract balance when it had funds: ${contractBalance}`
+      );
+      expect(balance2).to.be.equal(balance.add(contractBalance));
+    });
   }
 );
-
-

@@ -155,6 +155,7 @@ contract WordStorage {
         requireFeePayment
         returns (string memory)
     {
+        emit wordRequested(_wordNumber, msg.sender);
         return wordByNumber[_wordNumber];
     }
 
@@ -175,6 +176,7 @@ contract WordStorage {
         requireFeePayment
         returns (string memory)
     {
+        emit wordRequested(bytes32ForWordUint256[_wordBytes], msg.sender);
         return wordByBytes32[_wordBytes];
     }
 
@@ -185,6 +187,7 @@ contract WordStorage {
         requireFeePayment
         returns (uint256)
     {
+        emit wordRequested(bytes32ForWordUint256[_wordBytes], msg.sender);
         return bytes32ForWordUint256[_wordBytes];
     }
 
@@ -192,9 +195,9 @@ contract WordStorage {
     UTILS
     ********/
 
-    //Transfer function incase there is  value  left in the contract
-    function transferEther() external payable onlyWordDao {
-        ethReceiver.transfer(address(this).balance);
-    }
+    // //Transfer function incase there is  value  left in the contract
+    // function transferEther() external payable onlyWordDao {
+    //     ethReceiver.transfer(address(this).balance);
+    // }
 
 }
