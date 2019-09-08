@@ -103,6 +103,34 @@ contract(
       );
     });
 
+    it("should test getWordStringToBytes32", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+
+      const {logs} = await wordStorage.getWordStringToBytes32(word, {
+        from: secondAddress,
+        value: new BN(20)
+      });
+
+      expectEvent.inLogs(logs, "wordRequested", {
+        wordNumber: new BN(0),
+        requestor: secondAddress
+      });
+    });
+
+    it("should test getWordUint256ToBytes32", async () => {
+      await wordStorage.setWord(word, {from: firstAddress});
+
+      const {logs} = await wordStorage.getWordUint256ToBytes32(new BN(0), {
+        from: secondAddress,
+        value: new BN(20)
+      });
+
+      expectEvent.inLogs(logs, "wordRequested", {
+        wordNumber: new BN(0),
+        requestor: secondAddress
+      });
+    });
+
     it("Should find the correct word when sent as bytes32", async () => {
       await wordStorage.setWord(word, {from: firstAddress});
 
@@ -129,25 +157,6 @@ contract(
         wordNumber: new BN(0),
         requestor: secondAddress
       });
-    });
-
-    it("Should transfer any value in the contract to the ethReceiver", async () => {
-      await wordStorage.setWord(word, {from: firstAddress});
-      const balance = await web3.eth.getBalance(receiver.address);
-
-      const {logs} = await wordStorage.getWordBytes32ToUint256(wordBytes32, {
-        from: secondAddress,
-        value: new BN(200000000)
-      });
-
-      const contractBalance = await web3.eth.getBalance(wordStorage.address);
-      await wordStorage.transferEther();
-      const balance2 = await web3.eth.getBalance(receiver.address);
-
-      console.log(
-        `Inital Address BAalnce: ${balance} after address balance: ${balance2}  and the contract balance when it had funds: ${contractBalance}`
-      );
-      expect(balance2).to.be.equal(balance.add(contractBalance));
     });
   }
 );

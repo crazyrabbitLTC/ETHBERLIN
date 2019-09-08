@@ -115,6 +115,20 @@ contract WordStorage {
     }
 
     /********
+    Internal(ish) Getter  (NonPaid)
+    ********/
+
+    //Get the integer value of a word, by word, allowed only for wordDao
+    function getWordStringToUint256forDao(string calldata _word)
+        external
+        view
+        onlyWordDao
+        returns (uint256)
+    {
+        return numberForWord[_word];
+    }
+
+    /********
     PUBLIC GETTERS (FOR PAYMENT) 
     ********/
 
@@ -129,22 +143,13 @@ contract WordStorage {
         return numberForWord[_word];
     }
 
-    //Get the integer value of a word, by word, allowed only for wordDao
-    function getWordStringToUint256forDao(string calldata _word)
-        external
-        view
-        onlyWordDao
-        returns (uint256)
-    {
-        return numberForWord[_word];
-    }
-
     //Get bytes32 value for a word, by word.
     function getWordStringToBytes32(string calldata _word)
         external
         payable
         returns (bytes32)
     {
+        emit wordRequested(numberForWord[_word], msg.sender);
         return bytes32ForWord[_word];
     }
 
@@ -166,6 +171,7 @@ contract WordStorage {
         requireFeePayment
         returns (bytes32)
     {
+        emit wordRequested(_wordNumber, msg.sender);
         return uint256ForBytes32[_wordNumber];
     }
 
