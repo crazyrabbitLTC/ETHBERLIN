@@ -12,13 +12,14 @@ const WordToken = artifacts.require("WordToken");
 
 contract("Word Token", async ([_, owner, ...otherAccounts]) => {
   let wordToken;
-
+  let language = "english";
   beforeEach(async function() {
-    wordToken = await WordToken.new(10);
+    wordToken = await WordToken.new(10, language, language);
   });
 
   it("Should have the  WordToken Name", async () => {
-    (await wordToken.name()).should.equal("WordToken");
+    (await wordToken.name()).should.equal(language);
+    (await wordToken.symbol()).should.equal(language);
   });
 });
 

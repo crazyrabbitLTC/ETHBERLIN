@@ -32,7 +32,12 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       wordCount,
       keyPair.address
     );
-    expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
+    expectEvent.inLogs(logs, "storageCreated", {
+      language,
+      fee,
+      tribute,
+      wordCount
+    });
   });
 
   it("can add a signed word with proper tribute", async () => {
@@ -85,7 +90,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
     //console.log("The logs: ", logs[0].args["storagePointer"]);
     //let mock = await MOCK.new(WordDao.address);
-    //expectEvent.inLogs(logs, "daoSetup", {language, fee, tribute, wordCount});
+    //expectEvent.inLogs(logs, "storageCreated", {language, fee, tribute, wordCount});
   });
 
   it("can add a signed word", async () => {
