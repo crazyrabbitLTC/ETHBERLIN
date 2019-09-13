@@ -4,7 +4,7 @@ import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "./Verify.sol";
 import "./WordStorage.sol";
 import "./WordToken.sol";
-import "./StorageMaker.sol";
+//import "./StorageMaker.sol";
 
 contract WordDao is Initializable, Verify {
     //TODO: Decide if the WordDao should delegateCall the requests to the storage, or if the storage should be addressed inidividually.
@@ -243,6 +243,7 @@ contract WordDao is Initializable, Verify {
             _language,
             _language
         );
+
         tokens[_storagePointer] = tempToken;
 
         //Cast the address of this contract, the WordDao  to address payable
