@@ -4,7 +4,6 @@ import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "./Verify.sol";
 import "./WordStorage.sol";
 import "./WordToken.sol";
-//import "./StorageMaker.sol";
 
 contract WordDao is Initializable, Verify {
     //TODO: Decide if the WordDao should delegateCall the requests to the storage, or if the storage should be addressed inidividually.

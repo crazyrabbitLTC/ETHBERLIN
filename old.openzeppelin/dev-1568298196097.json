@@ -1,0 +1,268 @@
+{
+  "contracts": {
+    "StorageMaker": {
+      "address": "0x0E684bBCF13412bA4ED144fCcb633d08ba3fB8c7",
+      "constructorCode": "60806040523480156100115760006000fd5b50610017565b6122b7806100266000396000f3fe",
+      "bodyBytecodeHash": "75d68d0a26b81daba83b54aa4eaef43cfbbc5c56e1b28be24bc84cea03ff8a29",
+      "localBytecodeHash": "712876a76ad7837553998af7e03c9c12a096cc84a045cb72121aa43ac712d799",
+      "deployedBytecodeHash": "712876a76ad7837553998af7e03c9c12a096cc84a045cb72121aa43ac712d799",
+      "types": {},
+      "storage": [],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
+    },
+    "WordStorage": {
+      "address": "0xe0Da6937f7Dc2bef55Afb274707ce16cea50ef80",
+      "constructorCode": "60806040523480156100115760006000fd5b50610017565b611f9c806100266000396000f3fe",
+      "bodyBytecodeHash": "1adcfd897f4c4812d435bc9fc9c38542108d199b3f77b57124604e5027f8fe99",
+      "localBytecodeHash": "c3078d475ac14762eabbe13512d6e07dd8ad990431ed703bce96884a495155fa",
+      "deployedBytecodeHash": "c3078d475ac14762eabbe13512d6e07dd8ad990431ed703bce96884a495155fa",
+      "types": {
+        "t_bool": {
+          "id": "t_bool",
+          "kind": "elementary",
+          "label": "bool"
+        },
+        "t_uint256": {
+          "id": "t_uint256",
+          "kind": "elementary",
+          "label": "uint256"
+        },
+        "t_array:50<t_uint256>": {
+          "id": "t_array:50<t_uint256>",
+          "valueType": "t_uint256",
+          "length": "50",
+          "kind": "array",
+          "label": "uint256[50]"
+        },
+        "t_string": {
+          "id": "t_string",
+          "kind": "elementary",
+          "label": "string"
+        },
+        "t_address": {
+          "id": "t_address",
+          "kind": "elementary",
+          "label": "address"
+        },
+        "t_address_payable": {
+          "id": "t_address_payable",
+          "kind": "elementary",
+          "label": "address payable"
+        },
+        "t_mapping<t_string>": {
+          "id": "t_mapping<t_string>",
+          "valueType": "t_string",
+          "label": "mapping(key => string)",
+          "kind": "mapping"
+        },
+        "t_mapping<t_uint256>": {
+          "id": "t_mapping<t_uint256>",
+          "valueType": "t_uint256",
+          "label": "mapping(key => uint256)",
+          "kind": "mapping"
+        },
+        "t_bytes32": {
+          "id": "t_bytes32",
+          "kind": "elementary",
+          "label": "bytes32"
+        },
+        "t_mapping<t_bytes32>": {
+          "id": "t_mapping<t_bytes32>",
+          "valueType": "t_bytes32",
+          "label": "mapping(key => bytes32)",
+          "kind": "mapping"
+        },
+        "t_mapping<t_bool>": {
+          "id": "t_mapping<t_bool>",
+          "valueType": "t_bool",
+          "label": "mapping(key => bool)",
+          "kind": "mapping"
+        },
+        "t_array:dyn<t_bytes32>": {
+          "id": "t_array:dyn<t_bytes32>",
+          "valueType": "t_bytes32",
+          "length": "dyn",
+          "kind": "array",
+          "label": "bytes32[]"
+        },
+        "t_array:dyn<t_uint256>": {
+          "id": "t_array:dyn<t_uint256>",
+          "valueType": "t_uint256",
+          "length": "dyn",
+          "kind": "array",
+          "label": "uint256[]"
+        },
+        "t_array:dyn<t_string>": {
+          "id": "t_array:dyn<t_string>",
+          "valueType": "t_string",
+          "length": "dyn",
+          "kind": "array",
+          "label": "string[]"
+        }
+      },
+      "storage": [
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "initialized",
+          "astId": 660,
+          "type": "t_bool",
+          "src": "757:24:4"
+        },
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "initializing",
+          "astId": 662,
+          "type": "t_bool",
+          "src": "876:25:4"
+        },
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "______gap",
+          "astId": 718,
+          "type": "t_array:50<t_uint256>",
+          "src": "1951:29:4"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "totalWords",
+          "astId": 1368,
+          "type": "t_uint256",
+          "src": "130:25:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "language",
+          "astId": 1370,
+          "type": "t_string",
+          "src": "161:22:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "wordDao",
+          "astId": 1372,
+          "type": "t_address",
+          "src": "189:22:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "ethReceiver",
+          "astId": 1374,
+          "type": "t_address_payable",
+          "src": "217:34:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "fee",
+          "astId": 1376,
+          "type": "t_uint256",
+          "src": "257:18:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "wordByNumber",
+          "astId": 1411,
+          "type": "t_mapping<t_string>",
+          "src": "865:48:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "numberForWord",
+          "astId": 1415,
+          "type": "t_mapping<t_uint256>",
+          "src": "919:49:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "wordByBytes32",
+          "astId": 1419,
+          "type": "t_mapping<t_string>",
+          "src": "974:49:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "bytes32ForWord",
+          "astId": 1423,
+          "type": "t_mapping<t_bytes32>",
+          "src": "1029:50:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "uint256ForBytes32",
+          "astId": 1427,
+          "type": "t_mapping<t_bytes32>",
+          "src": "1085:54:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "bytes32ForWordUint256",
+          "astId": 1431,
+          "type": "t_mapping<t_uint256>",
+          "src": "1145:58:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "wordExists",
+          "astId": 1435,
+          "type": "t_mapping<t_bool>",
+          "src": "1210:41:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "arrayOfBytes32",
+          "astId": 1438,
+          "type": "t_array:dyn<t_bytes32>",
+          "src": "1271:33:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "arrayOfUint256",
+          "astId": 1441,
+          "type": "t_array:dyn<t_uint256>",
+          "src": "1310:33:8"
+        },
+        {
+          "contract": "WordStorage",
+          "path": "contracts/WordStorage.sol",
+          "label": "arrayOfWords",
+          "astId": 1444,
+          "type": "t_array:dyn<t_string>",
+          "src": "1349:30:8"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
+    }
+  },
+  "solidityLibs": {},
+  "proxies": {},
+  "manifestVersion": "2.2",
+  "version": "1.0.0"
+}
