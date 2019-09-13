@@ -246,16 +246,14 @@ contract WordDao is Initializable, Verify {
 
         tokens[_storagePointer] = tempToken;
 
-        //Cast the address of this contract, the WordDao  to address payable
+        //Cast the address of this contract, the WordDao to address payable
         address payable fundRecipent = address(uint160(address(this)));
 
         //Create a new wordStorage
         //TODO: Explore using Create2 to create wordStorage, this way we can predict their locations
-        WordStorage wordStorage = new WordStorage(
-            _language,
-            _fee,
-            fundRecipent
-        );
+        WordStorage wordStorage = new WordStorage();
+
+        wordStorage.setupStorage(_language, _fee, fundRecipent);
 
         //Store the created WordStorage in the Storage Units
         storageUnitArray.push(wordStorage);

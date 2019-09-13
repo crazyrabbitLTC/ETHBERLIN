@@ -1,6 +1,7 @@
 pragma solidity ^0.5.0;
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
 
-contract WordStorage {
+contract WordStorage is Initializable {
     uint256 public totalWords;
     string public language;
     address public wordDao;
@@ -69,11 +70,11 @@ contract WordStorage {
     CODE
     ********/
 
-    constructor(
+    function setupStorage(
         string memory _language,
         uint256 _fee,
         address payable _ethReceiver
-    ) public {
+    ) public initializer {
         language = _language;
         wordDao = msg.sender;
         fee = _fee;

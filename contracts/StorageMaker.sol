@@ -9,11 +9,9 @@ contract StorageMaker {
         uint256 _fee,
         address payable _fundRecipient
     ) public returns (WordStorage) {
-        WordStorage wordStorage = new WordStorage(
-            _language,
-            _fee,
-            _fundRecipient
-        );
+        WordStorage wordStorage = new WordStorage();
+
+        wordStorage.setupStorage(_language, _fee, _fundRecipient);
 
         return wordStorage;
     }

@@ -23,7 +23,8 @@ contract(
     const word3 = "love";
 
     beforeEach(async () => {
-      wordStorage = await WordStorage.new(language, fee, receiver.address);
+      wordStorage = await WordStorage.new();
+      await wordStorage.setupStorage(language, fee, receiver.address);
     });
 
     it("Should have the correct Language, Fee and receiver address", async () => {
