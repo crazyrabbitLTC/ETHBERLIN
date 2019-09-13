@@ -99,23 +99,9 @@ contract WordDao is Initializable, Verify {
     //TODO: Make Sign Authority changable
 
     //WordDao Setup
-    function setupDao(
-        string memory _language,
-        uint256 _fee,
-        uint256 _tribute,
-        uint256 _totalWordCount,
-        address _signAuthority
-    ) public initializer {
+    function setupDao() public initializer {
         //Set inital contract values
         owner = msg.sender;
-
-        _createStorage(
-            _language,
-            _fee,
-            _tribute,
-            _totalWordCount,
-            _signAuthority
-        );
     }
 
     function addWordStorage(
