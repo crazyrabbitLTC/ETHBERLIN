@@ -57,14 +57,15 @@ contract WordDao is Initializable, Verify {
         _;
     }
 
+    //Not clear  that we need this. Funds should be move out of Dao.
     //To prevent Reentrancy  for withdrawls. Copied from Moloch Dao.
-    bool locked;
-    modifier noReentrancy() {
-        require(!locked, "WordDao: Reentrant call");
-        locked = true;
-        _;
-        locked = false;
-    }
+    // bool locked;
+    // modifier noReentrancy() {
+    //     require(!locked, "WordDao: Reentrant call");
+    //     locked = true;
+    //     _;
+    //     locked = false;
+    // }
 
     /********
     EVENTS
@@ -190,7 +191,6 @@ contract WordDao is Initializable, Verify {
     //There should be a seperate Contract for splitting payments to Token Holders.
     function withDraw(uint256 _amount, address payable _destination)
         public
-        noReentrancy
         onlyMaster
     {
         require(_amount > 0, "Amount must be greater than zero");
