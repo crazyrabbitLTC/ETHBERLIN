@@ -58,6 +58,8 @@ contract WordDao is Initializable, Verify {
     }
 
     //Not clear  that we need this. Funds should be move out of Dao.
+    //Not needed only DAO can withdraw anyway.
+    //Should seperate money from Find.
     //To prevent Reentrancy  for withdrawls. Copied from Moloch Dao.
     // bool locked;
     // modifier noReentrancy() {
