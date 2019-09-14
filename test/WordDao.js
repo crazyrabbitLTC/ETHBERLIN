@@ -102,6 +102,70 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     //expectEvent.inLogs(logs, "storageCreated", {language, fee, tribute, wordCount});
   });
 
+  it("can add multiple languages", async () => {
+    const lang2 = "german";
+    const lang3 = "spanish";
+
+    const tx1 = await wordDao.addWordStorage(
+      lang2,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+
+    const tx2 = await wordDao.addWordStorage(
+      lang3,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+
+    expectEvent.inLogs(tx1.logs, "storageCreated", {
+      language: lang2,
+      fee,
+      tribute,
+      wordCount
+    });
+    expectEvent.inLogs(tx2.logs, "storageCreated", {
+      language: lang3,
+      fee,
+      tribute,
+      wordCount
+    });
+  });
+
+  it("can retrieve created languages", async () => {
+    const lang2 = "german";
+    const lang3 = "spanish";
+
+    const tx1 = await wordDao.addWordStorage(
+      lang2,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+
+    const tx2 = await wordDao.addWordStorage(
+      lang3,
+      fee,
+      tribute,
+      wordCount,
+      keyPair.address
+    );
+
+    //console.log(tx2.logs);
+    const storagePointer1 = tx1.logs[0].args.storagePointer;
+    const storagePointer2 = tx2.logs[0].args.storagePointer;
+    const languageRetrieved1 = await wordDao.storageLanguage(storagePointer1);
+    const languageRetrieved2 = await wordDao.storageLanguage(storagePointer2);
+
+    expect(languageRetrieved1).to.be.equal(lang2);
+    expect(languageRetrieved2).to.be.equal(lang3);
+  });
+
   it("can add a signed word", async () => {
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
