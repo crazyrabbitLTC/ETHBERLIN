@@ -18,6 +18,8 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   const fee = new BN(10);
   const tribute = new BN(10000000000);
+  const vanityTribute = new BN(20000000000);
+  const addVanityWord = new BN(40000000000);
   const wordCount = new BN(450000);
 
   const keyPair = web3.eth.accounts.create();
@@ -34,6 +36,7 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       language,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -50,27 +53,60 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       language,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
     const word = "love";
     const signature = await signWord(word, keyPair.privateKey);
-
+    const vanity = false;
     await shouldFail(
-      wordDao.addWord(language, word, signature, {
+      wordDao.addWord(language, word, signature, vanity, {
         from: secondAddress,
         value: new BN(0)
       }),
       "Tribute not high enough."
     );
 
-    const {logs} = await wordDao.addWord(language, word, signature, {
+    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
       from: secondAddress,
       value: tribute
     });
     expectEvent.inLogs(logs, "wordAdded", {
       word,
       tribute,
+      adder: secondAddress
+    });
+  });
+
+  it("can add a unsigned word with proper vanity tribute", async () => {
+    await wordDao.addWordStorage(
+      language,
+      fee,
+      tribute,
+      vanityTribute,
+      wordCount,
+      keyPair.address
+    );
+    const word = "love";
+    const signature = await signWord(word, keyPair.privateKey);
+    const vanity = true;
+    await shouldFail(
+      wordDao.addWord(language, word, signature, vanity, {
+        from: secondAddress,
+        value: new BN(0)
+      }),
+      "Tribute not high enough."
+    );
+
+    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
+      from: secondAddress,
+      value: addVanityWord
+    });
+    expectEvent.inLogs(logs, "wordAdded", {
+      word,
+      tribute: addVanityWord,
+      vanity: true,
       adder: secondAddress
     });
   });
@@ -83,6 +119,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   const language = "english";
   const fee = new BN(10);
   const tribute = new BN(11);
+  const vanityTribute = new BN(12);
   const wordCount = new BN(450000);
 
   const keyPair = web3.eth.accounts.create();
@@ -96,6 +133,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       language,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -115,6 +153,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       lang2,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -123,6 +162,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       lang3,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -149,6 +189,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       lang2,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -157,6 +198,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       lang3,
       fee,
       tribute,
+      vanityTribute,
       wordCount,
       keyPair.address
     );
@@ -173,8 +215,9 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("can add a signed word", async () => {
     const word = "love";
+    const vanity = false;
     const signature = await signWord(word, keyPair.privateKey);
-    const {logs} = await wordDao.addWord(language, word, signature, {
+    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
       from: secondAddress,
       value: tribute
     });
@@ -187,17 +230,18 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("will not allow illegal words to be added", async () => {
     const word = "love";
+    const vanity = false;
     const keyPair2 = web3.eth.accounts.create();
     const signature = await signWord(word, keyPair2.privateKey);
     await shouldFail(
-      wordDao.addWord(language, word, signature, {
+      wordDao.addWord(language, word, signature, vanity, {
         from: secondAddress,
         value: tribute
       }),
       "Word Not Valid."
     );
     await shouldFail(
-      wordDao.addWord(language, word, signature, {
+      wordDao.addWord(language, word, signature, vanity, {
         from: secondAddress
       }),
       "Tribute not high enough"
@@ -206,13 +250,14 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("will not accept the same word twice", async () => {
     const word = "love";
+    const vanity = false;
     const signature = await signWord(word, keyPair.privateKey);
-    await wordDao.addWord(language, word, signature, {
+    await wordDao.addWord(language, word, signature, vanity, {
       from: secondAddress,
       value: tribute
     });
     await shouldFail(
-      wordDao.addWord(language, word, signature, {
+      wordDao.addWord(language, word, signature, vanity, {
         from: secondAddress,
         value: tribute
       }),
@@ -222,9 +267,10 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("the balance of the contract increases when a word is added", async () => {
     const word = "love";
+    const vanity = false;
     const balanceBefore = await wordDao.getWordDaoBalance();
     const signature = await signWord(word, keyPair.privateKey);
-    await wordDao.addWord(language, word, signature, {
+    await wordDao.addWord(language, word, signature, vanity, {
       from: secondAddress,
       value: tribute
     });
@@ -270,9 +316,10 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
 
   it("We can withdraw the balance to an account with proper arugements", async () => {
     const word = "love";
+    const vanity = false;
     const signature = await signWord(word, keyPair.privateKey);
     const balanceBefore = await wordDao.getWordDaoBalance();
-    await wordDao.addWord(language, word, signature, {
+    await wordDao.addWord(language, word, signature, vanity, {
       from: secondAddress,
       value: tribute
     });

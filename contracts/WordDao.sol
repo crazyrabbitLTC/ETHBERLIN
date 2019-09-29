@@ -41,6 +41,9 @@ contract WordDao is Initializable, Verify {
     //The payment required to set a word.
     mapping(bytes32 => uint256) public tribute;
 
+    //The payment required to set a vanity word.
+    mapping(bytes32 => uint256) public vanityTribute;
+
     //The signature Authority that is required to have signed the words before adding them.
     mapping(bytes32 => address) public signAuthority;
 
@@ -81,6 +84,7 @@ contract WordDao is Initializable, Verify {
         string word,
         uint256 indexed wordIndex,
         uint256 tribute,
+        bool vanity,
         address adder
     );
 
@@ -91,6 +95,7 @@ contract WordDao is Initializable, Verify {
         bytes32 storagePointer,
         uint256 fee,
         uint256 tribute,
+        uint256 vanityTribute,
         uint256 wordCount,
         address storageContract,
         address signAuthority
@@ -116,6 +121,7 @@ contract WordDao is Initializable, Verify {
         string memory _language,
         uint256 _fee,
         uint256 _tribute,
+        uint256 _vanityTribute,
         uint256 _totalWordCount,
         address _signAuthority
     ) public onlyMaster {
@@ -123,6 +129,7 @@ contract WordDao is Initializable, Verify {
             _language,
             _fee,
             _tribute,
+            _vanityTribute,
             _totalWordCount,
             _signAuthority
         );
@@ -143,29 +150,48 @@ contract WordDao is Initializable, Verify {
     function addWord(
         string memory _language,
         string memory _word,
-        bytes memory signature
+        bytes memory _signature,
+        bool _vanity
     ) public payable {
         bytes32 _storagePointer = getStoragePointer(_language);
-        require(
-            storageUnits[_storagePointer].wordExists(_word) == false,
-            "Word has already been Added"
-        );
-        require(
-            isValidData(_word, signature, signAuthority[_storagePointer]),
-            "Word Not Valid"
-        );
-        require(
-            msg.value >= tribute[_storagePointer],
-            "Tribute not high enough"
-        );
+
+        if (_vanity) {
+            require(
+                storageUnits[_storagePointer].wordExists(_word) == false,
+                "WordDAO: Vanity Check: Word has already been Added"
+            );
+            require(
+                msg.value >= tribute[_storagePointer],
+                "WordDAO: Vanity Check: Tribute not high enough"
+            );
+            require(
+                msg.value - vanityTribute[_storagePointer] > 0,
+                "WordDAO: Vanity Check: Vanity fee not high enough"
+            );
+        } else {
+            require(
+                storageUnits[_storagePointer].wordExists(_word) == false,
+                "WordDAO: Word has already been Added"
+            );
+            require(
+                isValidData(_word, _signature, signAuthority[_storagePointer]),
+                "WordDAO: Word Not Valid"
+            );
+            require(
+                msg.value >= tribute[_storagePointer],
+                "WordDAO: Tribute not high enough"
+            );
+        }
 
         storageUnits[_storagePointer].setWord(_word);
         tokens[_storagePointer].transfer(msg.sender, 1);
         contractBalance += msg.value;
+
         emit wordAdded(
             _word,
             storageUnits[_storagePointer].getWordStringToUint256forDao(_word),
             msg.value,
+            _vanity,
             msg.sender
         );
     }
@@ -222,12 +248,14 @@ contract WordDao is Initializable, Verify {
         string memory _language,
         uint256 _fee,
         uint256 _tribute,
+        uint256 _vanityTribute,
         uint256 _totalWordCount,
         address _signAuthority
     ) internal {
         //DRY: Storage pointer
         bytes32 _storagePointer = getStoragePointer(_language);
         tribute[_storagePointer] = _tribute;
+        vanityTribute[_storagePointer] = _vanityTribute;
         //Setup the token with the tokens availible. This should be fixed to fix token supply.
         //Need to Extract this part to a new internal function
         WordToken tempToken = new WordToken(
@@ -235,7 +263,6 @@ contract WordDao is Initializable, Verify {
             _language,
             _language
         );
-
         tokens[_storagePointer] = tempToken;
 
         //Cast the address of this contract, the WordDao to address payable
@@ -265,6 +292,7 @@ contract WordDao is Initializable, Verify {
             _storagePointer,
             _fee,
             _tribute,
+            _vanityTribute,
             _totalWordCount,
             address(storageUnits[_storagePointer]),
             signAuthority[_storagePointer]
