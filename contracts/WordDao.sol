@@ -2,7 +2,8 @@ pragma solidity ^0.5.0;
 
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "./Verify.sol";
-import "./WordStorage.sol";
+import "./StorageFactory.sol";
+// import "./WordStorage.sol";
 import "./WordToken.sol";
 
 contract WordDao is Initializable, Verify {
@@ -23,6 +24,9 @@ contract WordDao is Initializable, Verify {
     //Address of the ERC20 token that is given to users who contribute words
     //WordToken public token;
     mapping(bytes32 => WordToken) public tokens;
+
+    //Address of WordStorageFactory
+    StorageFactory storageFactory;
 
     //Address of the WordStorage that is created by the WordDao contract
     //Track Multiple Storage Units
@@ -102,9 +106,10 @@ contract WordDao is Initializable, Verify {
     //TODO: Make Sign Authority changable
 
     //WordDao Setup
-    function setupDao() public initializer {
+    function setupDao(StorageFactory _storageFactory) public initializer {
         //Set inital contract values
         owner = msg.sender;
+        storageFactory = _storageFactory;
     }
 
     function addWordStorage(
@@ -238,9 +243,12 @@ contract WordDao is Initializable, Verify {
 
         //Create a new wordStorage
         //TODO: Explore using Create2 to create wordStorage, this way we can predict their locations
-        WordStorage wordStorage = new WordStorage();
-
-        wordStorage.setupStorage(_language, _fee, fundRecipent);
+        WordStorage wordStorage = storageFactory.createWordStorage(
+            _language,
+            _fee,
+            fundRecipent,
+            address(uint160(address(this)))
+        );
 
         //Store the created WordStorage in the Storage Units
         storageUnitArray.push(wordStorage);

@@ -14,7 +14,10 @@ contract WordStorage is Initializable {
 
     // Modifier that allows only the WordDao to administer the storage, copied from Moloch
     modifier onlyWordDao {
-        require(msg.sender == wordDao, "The sender is not the WordDao");
+        require(
+            msg.sender == wordDao,
+            "WordStorage:: The sender is not the WordDao"
+        );
         _;
     }
 
@@ -73,10 +76,11 @@ contract WordStorage is Initializable {
     function setupStorage(
         string memory _language,
         uint256 _fee,
-        address payable _ethReceiver
+        address payable _ethReceiver,
+        address _owner
     ) public initializer {
         language = _language;
-        wordDao = msg.sender;
+        wordDao = _owner;
         fee = _fee;
         ethReceiver = _ethReceiver;
         emit storageCreated(

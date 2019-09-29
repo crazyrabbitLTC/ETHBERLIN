@@ -9,9 +9,11 @@ const {signWord} = require("./utils/utils.js");
 const should = require("chai").should();
 
 const WordDao = artifacts.require("WordDao");
+const StorageFactory = artifacts.require("StorageFactory");
 
 contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   let wordDao;
+  let storageFactory;
   const language = "english";
 
   const fee = new BN(10);
@@ -21,9 +23,10 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   const keyPair = web3.eth.accounts.create();
 
   beforeEach(async () => {
+    storageFactory = await StorageFactory.new();
     wordDao = await WordDao.new();
     //Set owner
-    await wordDao.setupDao();
+    await wordDao.setupDao(storageFactory.address);
   });
 
   it("can setup a new WordDao", async () => {
@@ -85,8 +88,10 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   const keyPair = web3.eth.accounts.create();
 
   beforeEach(async () => {
+    storageFactory = await StorageFactory.new();
     wordDao = await WordDao.new();
-    await wordDao.setupDao();
+    //Set owner
+    await wordDao.setupDao(storageFactory.address);
     const {logs} = await wordDao.addWordStorage(
       language,
       fee,
