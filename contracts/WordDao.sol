@@ -64,6 +64,15 @@ contract WordDao is Initializable, Verify {
         _;
     }
 
+    modifier wordDoesNotExist(string memory _word, string memory _language) {
+        bytes32 pointer = getStoragePointer(_language);
+        require(
+            storageUnits[pointer].wordExists(_word) == false,
+            "WordDAO: Vanity Check: Word has already been Added"
+        );
+        _;
+    }
+
     //Not clear  that we need this. Funds should be move out of Dao.
     //Not needed only DAO can withdraw anyway.
     //Should seperate money from Find.
@@ -152,34 +161,22 @@ contract WordDao is Initializable, Verify {
         string memory _word,
         bytes memory _signature,
         bool _vanity
-    ) public payable {
+    ) public payable wordDoesNotExist(_word, _language) {
         bytes32 _storagePointer = getStoragePointer(_language);
+        require(
+            msg.value >= tribute[_storagePointer],
+            "WordDAO: Vanity Check: Tribute not high enough"
+        );
 
         if (_vanity) {
-            require(
-                storageUnits[_storagePointer].wordExists(_word) == false,
-                "WordDAO: Vanity Check: Word has already been Added"
-            );
-            require(
-                msg.value >= tribute[_storagePointer],
-                "WordDAO: Vanity Check: Tribute not high enough"
-            );
             require(
                 msg.value - vanityTribute[_storagePointer] > 0,
                 "WordDAO: Vanity Check: Vanity fee not high enough"
             );
         } else {
             require(
-                storageUnits[_storagePointer].wordExists(_word) == false,
-                "WordDAO: Word has already been Added"
-            );
-            require(
                 isValidData(_word, _signature, signAuthority[_storagePointer]),
                 "WordDAO: Word Not Valid"
-            );
-            require(
-                msg.value >= tribute[_storagePointer],
-                "WordDAO: Tribute not high enough"
             );
         }
 
