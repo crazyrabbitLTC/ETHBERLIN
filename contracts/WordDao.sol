@@ -26,7 +26,7 @@ contract WordDao is Initializable, Verify {
     mapping(bytes32 => WordToken) public tokens;
 
     //Address of WordStorageFactory
-    StorageFactory storageFactory;
+    StorageFactory public storageFactory;
 
     //Address of the WordStorage that is created by the WordDao contract
     //Track Multiple Storage Units

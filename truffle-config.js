@@ -67,5 +67,5 @@ module.exports = {
       gasPrice: 0x01 // <-- Use this low gas price
     }
   },
-  plugins: ["truffle-contract-size"]
+  plugins: ["truffle-contract-size", "truffle-security"]
 };
