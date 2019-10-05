@@ -45,7 +45,7 @@ contract WordDao is Initializable, Verify {
     mapping(bytes32 => uint256) public vanityTribute;
 
     //The signature Authority that is required to have signed the words before adding them.
-    mapping(bytes32 => address) public signAuthority;
+    mapping(bytes32 => bytes32) public merkleRoot;
 
     //Address of the Dao contract which controls the WordDao
     address public DAOController;
@@ -107,7 +107,7 @@ contract WordDao is Initializable, Verify {
         uint256 vanityTribute,
         uint256 wordCount,
         address storageContract,
-        address signAuthority
+        bytes32 merkleRoot
     );
 
     event setTribute(uint256 fee, string language);
@@ -132,7 +132,7 @@ contract WordDao is Initializable, Verify {
         uint256 _tribute,
         uint256 _vanityTribute,
         uint256 _totalWordCount,
-        address _signAuthority
+        bytes32 _merkleRoot
     ) public onlyMaster {
         _createStorage(
             _language,
@@ -140,7 +140,7 @@ contract WordDao is Initializable, Verify {
             _tribute,
             _vanityTribute,
             _totalWordCount,
-            _signAuthority
+            _merkleRoot
         );
     }
 
@@ -159,8 +159,10 @@ contract WordDao is Initializable, Verify {
     function addWord(
         string memory _language,
         string memory _word,
-        bytes memory _signature,
-        bool _vanity
+        bool _vanity,
+        bytes32 _leaf,
+        bytes32[] memory _proof,
+        uint256[] memory _positions
     ) public payable wordDoesNotExist(_word, _language) {
         bytes32 _storagePointer = getStoragePointer(_language);
         require(
@@ -175,7 +177,13 @@ contract WordDao is Initializable, Verify {
             );
         } else {
             require(
-                isValidData(_word, _signature, signAuthority[_storagePointer]),
+                isValidData(
+                    _word,
+                    merkleRoot[_storagePointer],
+                    _leaf,
+                    _proof,
+                    _positions
+                ),
                 "WordDAO: Word Not Valid"
             );
         }
@@ -247,7 +255,7 @@ contract WordDao is Initializable, Verify {
         uint256 _tribute,
         uint256 _vanityTribute,
         uint256 _totalWordCount,
-        address _signAuthority
+        bytes32 _merkleRoot
     ) internal {
         //DRY: Storage pointer
         bytes32 _storagePointer = getStoragePointer(_language);
@@ -280,9 +288,8 @@ contract WordDao is Initializable, Verify {
         storageLanguage[_storagePointer] = _language;
         storageCount += 1;
 
-        //Set the address that has the authority to sign new words
-        // signAuthority = address(0x76991b32A0eE1996E5c3dB5FdD29029882D587DF);
-        signAuthority[_storagePointer] = _signAuthority;
+        //Set the Merkle Root for the language
+        merkleRoot[_storagePointer] = _merkleRoot;
 
         emit storageCreated(
             _language,
@@ -292,7 +299,7 @@ contract WordDao is Initializable, Verify {
             _vanityTribute,
             _totalWordCount,
             address(storageUnits[_storagePointer]),
-            signAuthority[_storagePointer]
+            merkleRoot[_storagePointer]
         );
     }
 

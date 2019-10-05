@@ -5,7 +5,17 @@ const {
   shouldFail,
   expectRevert
 } = require("openzeppelin-test-helpers");
-const {signWord} = require("./utils/utils.js");
+const {
+  root,
+  leaf,
+  badLeaf,
+  proof,
+  badProof,
+  positions,
+  badPositions,
+  validWord,
+  invalidWord
+} = require("./utils/utils.js");
 const should = require("chai").should();
 
 const WordDao = artifacts.require("WordDao");
@@ -38,7 +48,7 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
     expectEvent.inLogs(logs, "storageCreated", {
       language,
@@ -55,25 +65,32 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
-    const word = "love";
-    const signature = await signWord(word, keyPair.privateKey);
+
     const vanity = false;
     await shouldFail(
-      wordDao.addWord(language, word, signature, vanity, {
+      wordDao.addWord(language, validWord, vanity, leaf, proof, positions, {
         from: secondAddress,
         value: new BN(0)
       }),
       "Tribute not high enough."
     );
 
-    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
-      from: secondAddress,
-      value: tribute
-    });
+    const {logs} = await wordDao.addWord(
+      language,
+      validWord,
+      vanity,
+      leaf,
+      proof,
+      positions,
+      {
+        from: secondAddress,
+        value: tribute
+      }
+    );
     expectEvent.inLogs(logs, "wordAdded", {
-      word,
+      word: validWord,
       tribute,
       adder: secondAddress
     });
@@ -86,23 +103,30 @@ contract("Setup WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
-    const word = "love";
-    const signature = await signWord(word, keyPair.privateKey);
+    const word = "hellabella";
     const vanity = true;
     await shouldFail(
-      wordDao.addWord(language, word, signature, vanity, {
+      wordDao.addWord(language, validWord, vanity, 0, 0, 0, {
         from: secondAddress,
         value: new BN(0)
       }),
       "Tribute not high enough."
     );
 
-    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
-      from: secondAddress,
-      value: addVanityWord
-    });
+    const {logs} = await wordDao.addWord(
+      language,
+      word,
+      vanity,
+      leaf,
+      proof,
+      positions,
+      {
+        from: secondAddress,
+        value: addVanityWord
+      }
+    );
     expectEvent.inLogs(logs, "wordAdded", {
       word,
       tribute: addVanityWord,
@@ -135,7 +159,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
 
     storagePointer = logs[0].args["storagePointer"];
@@ -155,7 +179,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
 
     const tx2 = await wordDao.addWordStorage(
@@ -164,7 +188,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
 
     expectEvent.inLogs(tx1.logs, "storageCreated", {
@@ -191,7 +215,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
 
     const tx2 = await wordDao.addWordStorage(
@@ -200,7 +224,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
       tribute,
       vanityTribute,
       wordCount,
-      keyPair.address
+      root
     );
 
     //console.log(tx2.logs);
@@ -216,11 +240,18 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   it("can add a signed word", async () => {
     const word = "love";
     const vanity = false;
-    const signature = await signWord(word, keyPair.privateKey);
-    const {logs} = await wordDao.addWord(language, word, signature, vanity, {
-      from: secondAddress,
-      value: tribute
-    });
+    const {logs} = await wordDao.addWord(
+      language,
+      validWord,
+      vanity,
+      leaf,
+      proof,
+      positions,
+      {
+        from: secondAddress,
+        value: tribute
+      }
+    );
     expectEvent.inLogs(logs, "wordAdded", {
       word,
       tribute,
@@ -228,36 +259,34 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     });
   });
 
-  it("will not allow illegal words to be added", async () => {
+  it("will not allow illegal non-vanity words to be added", async () => {
     const word = "love";
     const vanity = false;
     const keyPair2 = web3.eth.accounts.create();
-    const signature = await signWord(word, keyPair2.privateKey);
     await shouldFail(
-      wordDao.addWord(language, word, signature, vanity, {
+      wordDao.addWord(language, invalidWord, vanity, leaf, proof, positions, {
         from: secondAddress,
         value: tribute
       }),
-      "Word Not Valid."
+      "WordDAO: Word Not Valid"
     );
     await shouldFail(
-      wordDao.addWord(language, word, signature, vanity, {
+      wordDao.addWord(language, invalidWord, vanity, leaf, proof, positions, {
         from: secondAddress
       }),
-      "Tribute not high enough"
+      "WordDAO: Vanity Check: Tribute not high enough"
     );
   });
 
   it("will not accept the same word twice", async () => {
     const word = "love";
     const vanity = false;
-    const signature = await signWord(word, keyPair.privateKey);
-    await wordDao.addWord(language, word, signature, vanity, {
+    await wordDao.addWord(language, validWord, vanity, leaf, proof, positions, {
       from: secondAddress,
       value: tribute
     });
     await shouldFail(
-      wordDao.addWord(language, word, signature, vanity, {
+      wordDao.addWord(language, validWord, vanity, leaf, proof, positions, {
         from: secondAddress,
         value: tribute
       }),
@@ -269,8 +298,7 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
     const word = "love";
     const vanity = false;
     const balanceBefore = await wordDao.getWordDaoBalance();
-    const signature = await signWord(word, keyPair.privateKey);
-    await wordDao.addWord(language, word, signature, vanity, {
+    await wordDao.addWord(language, validWord, vanity, leaf, proof, positions, {
       from: secondAddress,
       value: tribute
     });
@@ -317,9 +345,8 @@ contract("Using WordDao", async ([sender, secondAddress, ...otherAccounts]) => {
   it("We can withdraw the balance to an account with proper arugements", async () => {
     const word = "love";
     const vanity = false;
-    const signature = await signWord(word, keyPair.privateKey);
     const balanceBefore = await wordDao.getWordDaoBalance();
-    await wordDao.addWord(language, word, signature, vanity, {
+    await wordDao.addWord(language, validWord, vanity, leaf, proof, positions, {
       from: secondAddress,
       value: tribute
     });

@@ -10,7 +10,7 @@ contract MerkleProof {
      * sibling hashes on the branch from the leaf to the root of the tree. Each
      * pair of leaves and each pair of pre-images are assumed to be sorted.
      */
-    function verify(
+    function merkleVerify(
         bytes32 root,
         bytes32 leaf,
         bytes32[] memory proof,
