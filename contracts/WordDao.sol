@@ -71,10 +71,10 @@ contract WordDao is Initializable, Verify {
     /********
     MODIFIERS
     ********/
-    /**
-@dev This is used to restrict functions to only the DAO (or master address)
- */
 
+    /**
+    *@dev This is used to restrict functions to only the DAO (or master address)
+    */
     modifier onlyMaster {
         require(msg.sender == owner, "WordDao:: Only Master DAO can Control");
         _;
