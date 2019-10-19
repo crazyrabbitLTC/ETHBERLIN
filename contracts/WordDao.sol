@@ -80,6 +80,7 @@ contract WordDao is Initializable, Verify {
         _;
     }
 
+    /** @dev A generic check that the word has not already been added */
     modifier wordDoesNotExist(string memory _word, string memory _language) {
         bytes32 pointer = getStoragePointer(_language);
         require(
@@ -105,6 +106,14 @@ contract WordDao is Initializable, Verify {
     EVENTS
     ********/
 
+    /** 
+    * Event for when a word is added. 
+    * @param word added to the WordDao database.
+    * @param wordIndex is the index (integer) of the word. 
+    * @param tribute is the amount of money paid by the user to add a word to the database
+    * @param vanity is a boolean indicating whether the word is a vanity word.
+    * @param adder is the address of the person or contract which added the word.
+    */
     event wordAdded(
         string word,
         uint256 indexed wordIndex,
@@ -113,8 +122,27 @@ contract WordDao is Initializable, Verify {
         address adder
     );
 
+    /** 
+    * @param daoMaster is the address that controls the WordDao Contract.
+    */
     event daoMaster(address daoMaster);
+
+    /** 
+    * @param destination is the address that recieves funds sent to WordDao.
+    * @param amount is the amount of money sent to the destination.
+    */
     event fundsTransfered(address destination, uint256 amount);
+
+    /** 
+    * @param language is the language of the created WordStorage.
+    * @param storagePointer is the index of the WordStorage in the WordDao mapping.
+    * @param fee is the amount of money required to access the WordStorage.
+    * @param tribute is the amount of money required to add a word. The
+    * @param vanityTribute is the amount of money required to add a vanity word. The
+    * @param wordCount is the number of words in the offical word list.
+    * @param storageContract is the address of the WordStorage contract.
+    * @param merkleRoot is the root required from the offical word list to add a word.
+    */
     event storageCreated(
         string language,
         bytes32 storagePointer,
