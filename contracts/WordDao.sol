@@ -46,6 +46,7 @@ contract WordDao is Initializable, Verify {
     //Track Multiple Storage Units
     mapping(bytes32 => WordStorage) public storageUnits;
     mapping(bytes32 => string) public storageLanguage;
+    mapping(bytes32 => bool) public storageExists;
     WordStorage[] public storageUnitArray;
     uint256 public storageCount;
 
@@ -106,10 +107,10 @@ contract WordDao is Initializable, Verify {
     EVENTS
     ********/
 
-    /** 
-    * Event for when a word is added. 
+    /**
+    * Event for when a word is added.
     * @param word added to the WordDao database.
-    * @param wordIndex is the index (integer) of the word. 
+    * @param wordIndex is the index (integer) of the word.
     * @param tribute is the amount of money paid by the user to add a word to the database
     * @param vanity is a boolean indicating whether the word is a vanity word.
     * @param adder is the address of the person or contract which added the word.
@@ -122,18 +123,21 @@ contract WordDao is Initializable, Verify {
         address adder
     );
 
-    /** 
+    /**
+    * Event for announcing the address that controls WordDao
     * @param daoMaster is the address that controls the WordDao Contract.
     */
     event daoMaster(address daoMaster);
 
-    /** 
+    /**
+    * Event for announcing the transfer of funds to a destination with amount
     * @param destination is the address that recieves funds sent to WordDao.
     * @param amount is the amount of money sent to the destination.
     */
     event fundsTransfered(address destination, uint256 amount);
 
-    /** 
+    /**
+    * Event for announcement of the creation of a WordStorage Contract
     * @param language is the language of the created WordStorage.
     * @param storagePointer is the index of the WordStorage in the WordDao mapping.
     * @param fee is the amount of money required to access the WordStorage.
@@ -154,7 +158,18 @@ contract WordDao is Initializable, Verify {
         bytes32 merkleRoot
     );
 
+    /**
+    * Event for announcement of the setting of Tribute fee
+    * @param fee is the amount of money required to add a word
+    * @param language is the language the fee is being set for
+    */
     event setTribute(uint256 fee, string language);
+
+    /**
+    * Event for announcement of the setting of the fee to access the WordStorage
+    * @param fee is the amount of money required to access the WordStorage
+    * @param language is the language the fee is being required for
+    */
     event setFee(uint256 fee, string language);
 
     /********
@@ -163,13 +178,27 @@ contract WordDao is Initializable, Verify {
 
     //TODO: Make Sign Authority changable
 
-    //WordDao Setup
+    /** 
+    * @dev This function is part of the setup. Currently we only set the address of the
+    * storageFactory contract 
+    * @param _storageFactory is the address of the storageFactory.
+    */
     function setupDao(StorageFactory _storageFactory) public initializer {
         //Set inital contract values
         owner = msg.sender;
         storageFactory = _storageFactory;
     }
 
+    /**
+    * @dev This function creates new WordStorage contracts. It is used to add additional
+    * languages to the WordDao contract.
+    * @param _language is the language of the storage contract.
+    * @param _fee is the amount of money required to access the WordStorage.
+    * @param _tribute is the amount of money required to add a word.
+    * @param _vanityTribute is the amount of money required to add a vanity word not in the list.
+    * @param _totalWordCount is the numnber of words in the official word list.
+    * @param _merkleRoot is the root of the merkle tree that holds the official word list.
+    */
     function addWordStorage(
         string memory _language,
         uint256 _fee,
@@ -188,18 +217,37 @@ contract WordDao is Initializable, Verify {
         );
     }
 
-    //Set the controller of the WordDao.
-    //Todo: his needs a more robust system. It should allow for a setup time, a dao, transfer to  down, and renounce control.
+    /**
+    * Todo: his needs a more robust system. It should allow for a setup time, a dao, transfer to  down, and renounce control.
+    * @dev This function sets the address which can contrl the WordDao contract.
+    * It is only possible to be called by the current owner/controller of the contract.
+    * @param _dao is the address that is being set to control the WordDao contract.
+    */
     function setMaster(address _dao) public onlyMaster {
         DAOController = _dao;
         emit daoMaster(_dao);
     }
 
+    /** 
+    * Todo: Not sure why we need this. 
+    * @dev This needs to be reconsidered, feels like duplicate functionality
+    */
     function setOwnerToDao() public onlyMaster {
         owner = DAOController;
     }
 
-    //Add a word to the DAO.
+    /**
+    * Todo: Should check to see if the size of our word list will make this function fail or not. 
+    * @dev Add a word to the the wordStorage associated to the language. Core functionality for adding words.
+    * @param _language is the language for which we are adding a word.
+    * @param _word is the word to add to the storage. 
+    * @param _vanity true if the word we are adding is not in the list of words.
+    * It's not important if vanity is in the list or not, it just changes the price the users needs to pay
+    * and avoids checking against the merkleRoot if it's a valid word or not.
+    * @param _leaf required to check if the word is in the official list or not. 
+    * @param _proof the merkle proof generated on the client side to prove the words is in the list.
+    * @param _positions the position of the leaves in the proof.
+    */
     function addWord(
         string memory _language,
         string memory _word,
@@ -245,7 +293,11 @@ contract WordDao is Initializable, Verify {
         );
     }
 
-    //Set the fee required to access a word.
+    /**
+    * @dev This sets the fee that is required for contracts to access the wordStorage.
+    * @param _fee This is the fee amount.
+    * @param _language This is the language of the wordStorage we want to set the fee for.
+    */
     function setUseFee(uint256 _fee, string calldata _language)
         external
         onlyMaster
@@ -254,7 +306,11 @@ contract WordDao is Initializable, Verify {
         storageUnits[getStoragePointer(_language)].changeFee(_fee);
     }
 
-    //Set the Fee required to add a word.
+    /**
+    * @dev This sets the fee that is required to add a word.
+    * @param _fee is the amount of money required to add a word.
+    * @param _language is the language of the wordStorage we want to set the fee for.
+    */
     function setTributeFee(uint256 _fee, string calldata _language)
         external
         onlyMaster
@@ -264,13 +320,20 @@ contract WordDao is Initializable, Verify {
         emit setTribute(_fee, _language);
     }
 
-    //Get the balance of the WordDao Contract itself.
+    /**
+    * @dev This retrieves the balance of the WordDao itself.
+    * Going forward this might not be nessesary. The plan is to ideally not keep funds in
+    * the contract at all.
+    */
     function getWordDaoBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
-    //Withdraw the Balance of the WordDao Contract
-    //There should be a seperate Contract for splitting payments to Token Holders.
+    /**
+    * @dev This will withdraw the balance of the WordDao contract if it has funds at it.
+    * Going forward this may be removed (or not?) depending on if the contract can DIRECTLY
+    * accept funds.
+    */
     function withDraw(uint256 _amount, address payable _destination)
         public
         onlyMaster
@@ -285,12 +348,16 @@ contract WordDao is Initializable, Verify {
     }
 
     //Utility Function to get the Storage Pointer Name from string into bytes32
-    function getStoragePointer(string memory _storageName)
+    /**
+    * @dev This is a utility function which returns the storage pointer for the wordStorage.
+    * It is generated by hashing the language name. For this reason languages must be unique.
+    */
+    function getStoragePointer(string memory _language)
         internal
         pure
         returns (bytes32)
     {
-        return keccak256(abi.encodePacked(_storageName));
+        return keccak256(abi.encodePacked(_language));
     }
 
     function _createStorage(
@@ -303,6 +370,10 @@ contract WordDao is Initializable, Verify {
     ) internal {
         //DRY: Storage pointer
         bytes32 _storagePointer = getStoragePointer(_language);
+        require(
+            storageExists[_storagePointer] == false,
+            "WordDao:: Storage Language already exists."
+        );
         tribute[_storagePointer] = _tribute;
         vanityTribute[_storagePointer] = _vanityTribute;
         //Setup the token with the tokens availible. This should be fixed to fix token supply.
@@ -330,6 +401,7 @@ contract WordDao is Initializable, Verify {
         storageUnitArray.push(wordStorage);
         storageUnits[_storagePointer] = wordStorage;
         storageLanguage[_storagePointer] = _language;
+        storageExists[_storagePointer] = true;
         storageCount += 1;
 
         //Set the Merkle Root for the language
