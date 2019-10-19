@@ -25,7 +25,9 @@ contract WordStorage is Initializable {
     // And sends the fee off to a predetermined address.
     modifier requireFeePayment {
         require(msg.value >= fee, "Requires Payment");
-        ethReceiver.transfer(msg.value);
+        if (msg.value > 0) {
+            ethReceiver.transfer(msg.value);
+        }
         _;
     }
 
