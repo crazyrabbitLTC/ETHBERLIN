@@ -1,9 +1,24 @@
 pragma solidity ^0.5.0;
 
+/**
+ * @title WordDAO
+ * @author Dennison Bertram, dennison@dennisonbertram.com
+ * @notice WordDAO is an integer->word mapping of words
+ * @dev WordDao is a factory contract which creates and manages individual
+ * WordStorage contracts. These contracts are created on a per-language basis.
+ * The indended purpose is that each WordStorage is created with a Merkle root
+ * that references an off-chain master list of words which constitute the total
+ * number of initial words intended to be stored in the WordStorage. Additional
+ * vanity words can be added to the storage for an additional fee, but by having
+ * a precomputed merkle tree of words, users can start to use WordDao prior to the
+ * contract being completed, IE: all the words stored.
+ * The WordDao contract is intended to be controlled by an external DAO where the
+ * members of the DAO are all the constitutents who contributed words to the WordStorage.
+ */
+
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "./Verify.sol";
 import "./StorageFactory.sol";
-// import "./WordStorage.sol";
 import "./WordToken.sol";
 
 contract WordDao is Initializable, Verify {
@@ -22,7 +37,6 @@ contract WordDao is Initializable, Verify {
     ********/
 
     //Address of the ERC20 token that is given to users who contribute words
-    //WordToken public token;
     mapping(bytes32 => WordToken) public tokens;
 
     //Address of WordStorageFactory
@@ -57,8 +71,10 @@ contract WordDao is Initializable, Verify {
     /********
     MODIFIERS
     ********/
+    /**
+@dev This is used to restrict functions to only the DAO (or master address)
+ */
 
-    //This requires that contract be from the owner. Owner can be set  to be  MasterDao.
     modifier onlyMaster {
         require(msg.sender == owner, "WordDao:: Only Master DAO can Control");
         _;
