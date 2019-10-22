@@ -62,7 +62,7 @@ contract WordStorage is Initializable {
     * @param word added to the storage.
     * @param from who the word was added, (the adders address)
     * @param wordNumber the integer that maps to the word added.
-    * @param wordByBytes32 the bytes32 version of the word.
+    * @param wordBytes32 the bytes32 version of the word.
     */
     event wordAdded(
         string word,
@@ -198,7 +198,7 @@ contract WordStorage is Initializable {
     /**
     * @dev Get the integer value of a word, by word, for contracts.
     * @param _word requetsed.
-    * @return`Integer value which maps to the requested word. 
+    * @return Integer value which maps to the requested word. 
     */
     function getWordStringToUint256(string calldata _word)
         external
@@ -213,7 +213,7 @@ contract WordStorage is Initializable {
     /**
     * @dev Get bytes32 value for a word, by word. by word, for contracts.
     * @param _word requetsed.
-    * @return`bytes32 value which maps to the requested word. 
+    * @return bytes32 value which maps to the requested word.
     */
     function getWordStringToBytes32(string calldata _word)
         external
