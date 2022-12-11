@@ -43,7 +43,7 @@
     "eth-crypto": "^1.4.0",
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-util": "^6.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "keccak256": "^1.0.0",
     "merkle-tree-solidity": "^1.0.8",
     "merkletreejs": "^0.1.7",
